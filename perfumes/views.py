@@ -10,6 +10,8 @@ from PIL import Image
 from ollama import generate
 from .models import Perfume, Description
 import json
+import spacy
+nlp = spacy.load("en_core_web_sm")  # Or the appropriate model for your language
 
 # Chargement ou création du fichier CSV pour sauvegarder les descriptions
 def load_or_create_dataframe(filename):
@@ -69,86 +71,91 @@ Fill in the details as accurately as possible based on the image you are analyzi
     return full_response
 
 
+def recommanded_process_image(image_file):
+    # Charger l'image et la convertir en bytes pour le modèle
+    with Image.open(image_file) as img:
+        with BytesIO() as buffer:
+            img.save(buffer, format='PNG')
+            image_bytes = buffer.getvalue()
 
+    full_response = ''
+
+    prompt = """
+Please describe the perfume image you are analyzing and provide the details in the following :
+Nom,Marque,Type,Contenance,Notes_de_Tête,Notes_de_Coeur,Notes_de_Fond,Ingrédients,Design,Forme,Description_Forme_Couleu
+Fill in the details as accurately as possible based on the image you are analyzing, including descriptions of the bottle’s shape and coloration.
+"""
+    # Envoyer l'image au modèle LLaVA pour obtenir la description
+    for response in generate(model='llava', 
+                             prompt=prompt,
+                             images=[image_bytes], 
+                             stream=True):
+        full_response += response['response']
+    
+    return full_response
 
 
 
 
 
 def upload_image(request):
-    matching_images = []  # Initialize matching_images list
-
     if request.method == 'POST':
         form = PerfumeImageUploadForm(request.POST, request.FILES)
         if form.is_valid():
             image = request.FILES['image']
 
             # Process the uploaded image to get the description
-            description = process_image(image, df)  # Include df here
+            description = recommanded_process_image(image)  # Generate the description from the image
+            matching_perfumes = compare_with_database(description)  # Compare with the database
 
-            # Load existing descriptions from the CSV file
-            existing_data = pd.read_csv('image_descriptions.csv')
-
-            # Prepare the matching prompt with existing data
-            matching_images = compare_with_csv(description, existing_data)
-
-            # Prepare to display the description and any matching images
-            image_url = image.url if hasattr(image, 'url') else None
-
-            # Optionally, you can include the description in the context if you want to display it as well
+            # Prepare to display the description and any matching perfumes
             return render(request, 'upload.html', {
                 'form': form,
-                'image_url': image_url,
-                'matching_images': matching_images,
-                'description': description  # Optional
+                'description': description,
+                'matching_perfumes': matching_perfumes  # Pass matching perfumes to the template
             })
     else:
         form = PerfumeImageUploadForm()
 
-    return render(request, 'upload.html', {'form': form, 'matching_images': matching_images})
+    return render(request, 'upload.html', {'form': form})
 
-def compare_with_csv(new_description, existing_data):
-    """
-    Prepare a prompt for the LLaVA model to compare the new description
-    with existing descriptions in the DataFrame and return matching image names.
-    """
-    # Convert existing descriptions to a string format
-    existing_descriptions = existing_data.to_dict(orient='records')
 
-    # Create the prompt for the model
-    compare_prompt = f"""
-    Compare the following perfume description with existing records:
 
-    New Description:
-    {new_description}
+def compare_with_database(description):
+    # Parse the description with SpaCy
+    doc = nlp(description)
+    
+    # Extract keywords and create a set of tokens from the description
+    description_tokens = set(token.lemma_.lower() for token in doc if not token.is_stop)
 
-    Existing Records (from CSV):
-    {existing_descriptions}
+    # Initialize a list for scoring
+    scores = []
 
-    Please return the names of any matching images based on the description along with their details.
-    """
+    # Fetch all perfumes from the database
+    perfumes = Perfume.objects.all()
+    
+    for perfume in perfumes:
+        # Concatenate attributes into a single string
+        perfume_attributes = f"{perfume.nom} {perfume.marque} {perfume.type} " \
+                             f"{perfume.contenance} {perfume.notes_de_tete} " \
+                             f"{perfume.notes_de_coeur} {perfume.notes_de_fond} " \
+                             f"{perfume.ingredients} {perfume.design} {perfume.forme}"
+        
+        # Tokenize the concatenated perfume attributes
+        perfume_doc = nlp(perfume_attributes)
+        perfume_tokens = set(token.lemma_.lower() for token in perfume_doc if not token.is_stop)
 
-    matches = []
+        # Calculate similarity score using Jaccard similarity
+        intersection = description_tokens.intersection(perfume_tokens)
+        union = description_tokens.union(perfume_tokens)
+        jaccard_score = len(intersection) / len(union) if len(union) > 0 else 0
+        
+        scores.append((perfume, jaccard_score))
 
-    # Send the compare prompt to the LLaVA model
-    for response in generate(model='llava', 
-                             prompt=compare_prompt,
-                             stream=True):
-        # Assuming the response contains a structured JSON-like output
-        matches.append(response['response'])  # Collecting full responses for later parsing
-
-    # Parse matches to extract relevant information
-    parsed_matches = []
-    for match in matches:
-        # Here, you'll need to convert the match string into a structured format
-        # Assuming match is a string of descriptions, you can use `json.loads` if it's in JSON format
-        try:
-            parsed_data = eval(match)  # Use eval cautiously or implement a safer parsing
-            parsed_matches.append(parsed_data)
-        except Exception as e:
-            print(f"Error parsing match: {e}")  # Handle parsing errors
-
-    return parsed_matches
+    # Sort perfumes by score in descending order and get the top 2
+    top_matches = sorted(scores, key=lambda x: x[1], reverse=True)[:2]
+    
+    return [match[0] for match in top_matches]  # Return only the matching perfumes
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff  # Vérifie si l'utilisateur est authentifié et un membre du personnel
