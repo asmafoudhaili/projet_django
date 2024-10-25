@@ -1,0 +1,24 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Upload Image</button>
+</form>
+
+{% if matching_images %}
+    <h2>Matching Images:</h2>
+    <ul>
+        {% for image in matching_images %}
+            <li>{{ image }}</li>  <!-- List each matching image -->
+        {% endfor %}
+    </ul>
+{% endif %}
+
+{% if image_url %}
+    <h2>Uploaded Image:</h2>
+    <img src="{{ image_url }}" alt="Uploaded Image">
+{% endif %}
+
+{% if description %}
+    <h2>Description:</h2>
+    <p>{{ description }}</p>
+{% endif %}

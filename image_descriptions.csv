@@ -1,0 +1,171 @@
+image_file,description
+images (1).jpg," [
+    [""Nom"", ""Savage""],
+    [""Marque"", ""Dior""],
+    [""Type"", ""Eau de Parfum""],
+    [""Contenance"", ""100 ml / 3.38 fl oz""],
+    [""Notes_de_Tête"", [""Bergamot, Grapefruit""]],
+    [""Notes_de_Coeur"", [""Clary Sage, Violet Leaves""]],
+    [""Notes_de_Fond"", [""Ambroxan, Patchouli, Cedarwood Hydrosol""]],
+    [""Ingrédients"", [""Alcohol, Water, Parfum""]],
+    [""Utilisation"", ""Spray on skin or clothes""],
+    [""Détails_de_Fabrication"", ""Made in France""],
+    [""Code_Barres"", ""1234567890""],
+    [""Avertissements"", [""Keep out of reach of children. Do not spray near the eyes, on open flames or while driving a vehicle. Flammable liquid. Keep away from heat and open flame. Contains: Alcohol, fragrance.""],
+    [""Design"", ""The perfume bottle is designed to have a cylindrical shape with a matte finish, predominantly in shades of white and grey, with text elements and the brand name displayed prominently on the label.""],
+    [""Forme"", ""Rectangular""],
+    [""Couleur"", ""White and grey coloration for the bottle and packaging""],
+    [""Description_Forme_Couleur"", ""The perfume bottle has a rectangular shape with a predominantly white body, adorned with shades of grey near the base and top. The cap is also grey, complementing the overall color scheme. The label features text elements in contrasting colors to enhance readability and showcase the brand name 'DIOR' prominently.""],
+] "
+images (1).jpg," ```
+{
+    ""Nom"": ""Salvage Eau de Parfum"",
+    ""Marque"": ""Dior"",
+    ""Type"": ""Eau de Parfum"",
+    ""Contenance"": ""100 ml (3.38 fl oz)"",
+    ""Notes_de_Tête"": [""Top notes: Lemon, Bergamot, Grapefruit""],
+    ""Notes_de_Coeur"": [""Heart notes: Geranium, Patchouli, Vetiver""],
+    ""Notes_de_Fond"": [""Base notes: Ambrox, Iso-E Super"",
+    ""Ingrédients"": [""Alcohol, Water, Parfum""],
+    ""Utilisation"": ""Skin Type: For all skin types"",
+    ""Détails_de_Fabrication"": ""Made in France"",
+    ""Code_Barres"": ""Not available in this image"",
+    ""Avertissements"": [""Avoid contact with eyes, skin and clothing""],
+    ""Design"": ""The perfume bottle has a rectangular shape, predominantly in black color. It features the brand name in white text and a minimalist design. The packaging includes the Dior logo in white text against a dark background."",
+    ""Forme"": ""Rectangular"",
+    ""Couleur"": [""Black for the perfume bottle, and white for the box""],
+    ""Description_Forme_Couleur"": ""The image shows a rectangular perfume bottle with black coloration. The Dior logo is visible on the bottle in white text, against a dark background. The bottle has a simple design, without any additional patterns or decorations. It is standing upright against a plain background.""
+}
+``` "
+jessica-weiller-So4eFi-d1nc-unsplash.jpg," {
+    Nom: ""J'adore"",
+    Marque: ""Dior"",
+    Type: ""Eau de Parfum"",
+    Contenance: 30ml / 1 fl oz,
+    Notes_de_Tête: [""Top notes: Bergamot and mandarin""],
+    Notes_de_Coeur: [""Heart notes: Jasmine and rose""],
+    Notes_de_Fond: [""Base notes: Patchouli and ambrox""],
+    Ingrédients: ""Alcohol, water, fragrance"",
+    Utilisation: ""Apply to pulse points: wrist, neck, behind the ear"",
+    Détails_de_Fabrication: ""Made in France"",
+    Code_Barres: Unavailable (image resolution is too low),
+    Avertissements: ""Avoid contact with eyes and skin"",
+    Design: ""The perfume bottle has a rectangular shape with a transparent body. The color scheme consists of a clear glass bottle, a golden cap, and a white label with black text on the front of the bottle. The overall design is elegant and minimalistic."",
+    Forme: ""The perfume bottle has a rectangular shape"",
+    Couleur: ""The perfume bottle's body is transparent, while the cap is golden. The label is predominantly white with black text, giving it a classic and sophisticated appearance.""
+} "
+6ea2e66ea2abf406881796ecbca136e2.jpg," {
+    Nom: ""Dolce Gabbana The One Eau de Parfum"",
+    Marque: ""Dolce & Gabbana"",
+    Type: ""Eau de Parfum"",
+    Contenance: ""100 ml / 3.4 fl oz"",
+    Notes_de_Tête: [""Top notes: Grapefruit, Black pepper""],
+    Notes_de_Coeur: [""Heart notes: Violet, Jasmine""],
+    Notes_de_Fond: [""Base notes: Vanilla, Patchouli""],
+    Ingredients: ""Alcohol denat., Water, Parfum"",
+    Utilisation: ""For personal use. Apply to the pulse points of your skin such as behind the ears, at the base of the neck, on the wrists and inner elbows for the best effect"",
+    Détails_de_Fabrication: ""Made in Italy"",
+    Code_Barres: ""Not visible"",
+    Avertissements: ""Keep out of reach of children. Do not use if you have sensitive skin, allergies or asthma. Avoid contact with eyes."",
+    Design: ""Vintage perfume bottle design with a rounded shape and gold accents on the cap and base of the bottle. The packaging has a clear glass container that allows visibility of the liquid inside."",
+    Forme: ""The bottle's shape is rounded, and it appears to be a standard perfume bottle shape commonly used for Eau de Parfum fragrances."",
+    Couleur: ""The coloration of the perfume bottle is gold, with the base having a metallic appearance. The liquid inside has a pale yellow tint."",
+    Description_Forme_Couleur: ""The perfume bottle design and coloration feature a vintage aesthetic with golden accents on the cap and base, giving it an elegant and luxurious look. The bottle itself is round in shape, which is typical for Eau de Parfum fragrances, and it has a clear glass container that allows visibility of the liquid inside.""
+} "
+6ea2e66ea2abf406881796ecbca136e2.jpg," ```css
+{
+    Nom: ""DOUCE CABANE ONE Eau de Parfum"",
+    Marque: ""Douce Caban"",
+    Type: ""Eau de Parfum"",
+    Contenance: 100 ml,
+    Notes_de_Tête: [""Top notes: Fruity""],
+    Notes_de_Coeur: [""Heart notes: Floral""],
+    Notes_de_Fond: [""Base notes: Musky""],
+    Ingrédients: [""List of ingredients: Alcohol, Water, Perfume""],
+    Utilisation: ""Usage instructions: Apply on pulse points"",
+    Détails_de_Fabrication: ""Made in France"",
+    Code_Barres: ""Not possible to identify from image"",
+    Avertissements: ""Warnings and precautions: Avoid contact with eyes"",
+    Design: ""The perfume bottle features a rectangular shape with a frosted glass body, a gold cap, and the brand name prominently displayed in white on both the cap and the body. The background shows a wooden table or shelf with a blurred item behind the perfume bottle, suggesting a retail or display setting."",
+    Forme: ""The perfume bottle has a rectangular shape"",
+    Couleur: ""The overall coloration of the perfume bottle is a mix of gold from the cap and the frosted glass body, which gives it an opulent appearance. There are no visible signs of other colors in the image."",
+    Description_Forme_Couleur: ""The perfume bottle has a sleek, rectangular shape with a frosted glass body that gives it an elegant and sophisticated look, complemented by the gold cap which adds a touch of luxury. The brand name is clearly visible on both the cap and the body, indicating the product's identity as a Douce Cabanè perfume.""
+}
+``` "
+mockup-perfume-bottle-minimalist-scene_941097-47707.jpg," ```css
+{
+    Nom: ""Perfume de l'Artisan"",
+    Marque: ""L'Artisan"",
+    Type: ""Eau de Parfum"",
+    Contenance: ""100ml / 3.38 fl oz"",
+    Notes_de_Tête: [""Top notes of citrus and bergamot""],
+    Notes_de_Coeur: [""Heart notes of rose, jasmine, and ylang-ylang""],
+    Notes_de_Fond: [""Base notes of patchouli, cedar, and ambrox""],
+    Ingredients: ""Alcohol, Water, Perfume"",
+    Utilisation: ""Spray on pulse points or massage into the skin to release the scent"",
+    Détails_de_Fabrication: ""Handcrafted with natural ingredients in a small-batch process"",
+    Code_Barres: ""Not visible in the image provided"",
+    Avertissements: ""For external use only. Keep out of reach of children."",
+    Design: ""The bottle has a modern and minimalist design, featuring a clear glass body with a matte finish and a gold-colored cap. The packaging includes a white label with the brand name and fragrance details."",
+    Forme: ""Cylindrical"",
+    Couleur: ""Transparent glass body, gold-colored cap and label.""
+}
+``` "
+mockup-perfume-bottle-minimalist-scene_941097-47707.jpg," ```json
+{
+    ""Nom"": ""The perfume is called 'EAU DE PARFUM 2019', but the specific scent name is not visible in the image."",
+    ""Marque"": ""There's no brand name visible on the bottle in the image. The text 'THE PERFUME BRAND' is present, but it does not correspond to any recognizable perfume brand."",
+    ""Type"": ""The type of perfume is 'EAU DE PARFUM'."",
+    ""Contenance"": ""The perfume is contained within a bottle that has a volume of 100 ml."",
+    ""Notes_de_Tête"": [""Top notes (e.g. Fruity, Floral): Citrusy with bergamot and pink grapefruit""],
+    ""Notes_de_Coeur"": [""Heart notes (e.g. Floral, Spicy): A mix of peach, apricot, and a hint of spices""],
+    ""Notes_de_Fond"": [""Base notes (e.g. Musky, Woody): Sandalwood, ambrox, cedar wood""],
+    ""Ingrédients"": [""List of ingredients: Alcohol, Water, Parfum""],
+    ""Utilisation"": ""Usage instructions: To be applied to pulse points on the body."",
+    ""Détails_de_Fabrication"": ""Details of production: Made in Italy"",
+    ""Code_Barres"": ""There is no barcode number visible on the bottle or packaging."",
+    ""Avertissements"": [""Warnings and precautions: Keep out of reach of children. Use only as directed.""],
+    ""Design"": ""The perfume bottle has a rectangular shape with a frosted glass body and a silver cap. It is presented in front of an outdoor landscape, possibly suggesting the inspiration behind the fragrance."",
+    ""Forme"": [""Shape of the bottle: The perfume bottle is rectangular with a rounded top, making it easy to hold and apply.""],
+    ""Couleur"": [""Colors of the bottle and packaging: The bottle has a gold-tinted glass body with no visible coloration on its cap or neck."",
+    ""Description_Forme_Couleur"": ""The overall form and coloration of the perfume bottle and packaging is minimalistic and luxurious, suggesting a high-end product. The use of a frosted glass body in combination with the gold-tinted cap creates a sense of elegance and sophistication.""
+}
+``` "
+jessica-weiller-So4eFi-d1nc-unsplash.jpg," {
+    Nom: Not specified in image,
+    Marque: Not specified in image,
+    Type: ""Eau de Parfum"",
+    Contenance: 50 ml / 1.69 fl oz,
+    Notes_de_Tête: [""Top notes: Fruity""],
+    Notes_de_Coeur: [""Heart notes: Floral""],
+    Notes_de_Fond: [""Base notes: Musky, Woody""],
+    Ingrédients: Not specified in image,
+    Utilisation: ""Usage instructions: Spray on pulse points. AVOID contact with eyes."",
+    Détails_de_Fabrication: ""Made in France"",
+    Code_Barres: Not visible in image,
+    Avertissements: ""Warnings and precautions: Avoid contact with eyes"",
+    Design: The perfume bottle is clear and rectangular. It appears to have a simple design without any notable patterns or textures. The label on the bottle is not clearly visible, but it likely contains branding and additional details about the fragrance.
+    Forme: Rectangular shape.
+    Couleur: Clear with a white interior.
+    Description_Forme_Couleur: ""The overall form of the perfume bottle is rectangular, with a clear glass that allows visibility of the contents. The coloration is a combination of transparent for the body and white for the interior of the bottle.""
+} "
+jessica-weiller-So4eFi-d1nc-unsplash.jpg," ```json
+{
+    Nom: ""Not Available"",
+    Marque: ""Not Available"",
+    Type: ""Eau de Parfum"",
+    Contenance: 1 fl oz,
+    Notes_de_Tête: [""Top notes not specified""],
+    Notes_de_Coeur: [""Heart notes not specified""],
+    Notes_de_Fond: [""Base notes not specified""],
+    Ingredients: [""List of ingredients not visible in the image""],
+    Utilisation: ""Usage instructions not available"",
+    Détails_de_Fabrication: ""Details of production not available"",
+    Code_Barres: ""Not Available"",
+    Avertissements: ""Warnings and precautions not available"",
+    Design: ""The bottle is a transparent glass with a golden cap. It has a sleek, rectangular shape."",
+    Forme: ""Rectangular"",
+    Couleur: ""Transparent for the glass bottle and gold for the cap"",
+    Description_Forme_Couleur: ""The perfume bottle is a clear, transparent glass with a golden cap. It has a sleek, rectangular shape.""
+}
+``` "

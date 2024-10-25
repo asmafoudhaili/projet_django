@@ -32,7 +32,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-            'auth_app',
+    'perfumes',
+    'auth_app',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -145,5 +146,5 @@ EMAIL_BACKEND = "anymail.backends.sendinblue.EmailBackend"
 ANYMAIL = {
     "SENDINBLUE_API_KEY": "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",
 }
-LOGIN_URL = '/login'  # L'URL de redirection pour la page de connexion
-LOGIN_REDIRECT_URL = '/'  # L'URL de redirection après connexion réussie
+LOGIN_URL = '/http://127.0.0.1:8000/login'  # L'URL de redirection pour la page de connexion
+LOGIN_REDIRECT_URL = '/http://127.0.0.1:8000/'  # L'URL de redirection après connexion réussie
