@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from perfumes.models import Perfume
 from perfumes.forms import PerfumeForm
 
+
 def index(request):
     perfumes = Perfume.objects.all()  # Récupérer tous les parfums
     form = None

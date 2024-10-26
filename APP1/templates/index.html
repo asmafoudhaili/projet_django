@@ -449,10 +449,15 @@
         <h1 class="section-title text-center mt-4">Perfume Collection</h1>
         <div class="col-md-6 text-center">
             <p>Discover our exclusive collection of luxury perfumes. Each fragrance is crafted to perfection.</p>
-            <!-- Bouton Ajouter -->
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addPerfumeModal">
-                Ajouter un Parfum
-            </button>
+            <!-- Bouton Ajouter -->                    {% if user.is_superuser %}
+
+            <a href="{% url 'perfume_create' %}" class="btn btn-primary">
+              Ajouter un Parfum
+          </a>
+          
+        
+            {% endif %}
+
         </div>
     </div>
     
@@ -461,8 +466,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
+                  {% if user.is_superuser %}
+
                     <h5 class="modal-title" id="addPerfumeModalLabel">Ajouter un Parfum</h5>
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    {% endif %}
+
                 </div>
                 <div class="modal-body">
                     <form id="perfumeForm" method="POST" enctype="multipart/form-data">
