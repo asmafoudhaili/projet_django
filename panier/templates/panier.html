@@ -136,11 +136,11 @@
         <path fill="currentColor"
           d="M18.71 7.21a1 1 0 0 0-1.42 0l-7.45 7.46l-3.13-3.14A1 1 0 1 0 5.29 13l3.84 3.84a1 1 0 0 0 1.42 0l8.16-8.16a1 1 0 0 0 0-1.47Z" />
       </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="trash" viewBox="0 0 24 24">
-        <path fill="currentColor"
-          d="M10 18a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1ZM20 6h-4V5a3 3 0 0 0-3-3h-2a3 3 0 0 0-3 3v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8h1a1 1 0 0 0 0-2ZM10 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1h-4Zm7 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8h10Zm-3-1a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1Z" />
-      </symbol>
-      <symbol xmlns="http://www.w3.org/2000/svg" id="star-outline" viewBox="0 0 15 15">
+        <symbol xmlns="http://www.w3.org/2000/svg" id="trash" viewBox="0 0 24 24">
+          <path fill="currentColor"
+            d="M10 18a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1ZM20 6h-4V5a3 3 0 0 0-3-3h-2a3 3 0 0 0-3 3v1H4a1 1 0 0 0 0 2h1v11a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3V8h1a1 1 0 0 0 0-2ZM10 5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v1h-4Zm7 14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V8h10Zm-3-1a1 1 0 0 0 1-1v-6a1 1 0 0 0-2 0v6a1 1 0 0 0 1 1Z" />
+        </symbol>
+              <symbol xmlns="http://www.w3.org/2000/svg" id="star-outline" viewBox="0 0 15 15">
         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
           d="M7.5 9.804L5.337 11l.413-2.533L4 6.674l2.418-.37L7.5 4l1.082 2.304l2.418.37l-1.75 1.793L9.663 11L7.5 9.804Z" />
       </symbol>
@@ -463,7 +463,7 @@
           </div>
   
           <div class="row mt-4">
-              <div class="col-12">
+              <div class="col-lg-8">
                   <div class="cart">
                       {% if cart_items %}
                           <table class="table">
@@ -476,46 +476,51 @@
                                   </tr>
                               </thead>
                               <tbody>
-                                  {% for item in cart_items %}
-                                      <tr>
-                                          <td class="d-flex align-items-center">
-                                              <div>
-                                                  <h5 class="mb-1">{{ item.item.custom_order.name }}</h5>
-                                                  <p class="mb-0"><strong>Fragrance Strength:</strong> {{ item.item.custom_order.fragrance_strength }}</p>
-                                                  <p class="mb-0"><strong>Engraving Text:</strong> {{ item.item.custom_order.engraving_text }}</p>
-                                                  <p class="mb-0"><strong>Price:</strong> ${{ item.item.custom_order.total_amount }}</p>
-                                              </div>
-                                          </td>
-                                          <td>
-                                              <div class="input-group input-group-sm" style="max-width: 120px;">
-                                                  <button class="btn btn-outline-secondary btn-sm">-</button>
-                                                  <input type="text" class="form-control text-center" value="{{ item.item.quantity }}" style="max-width: 50px;" readonly>
-                                                  <button class="btn btn-outline-secondary btn-sm">+</button>
-                                              </div>
-                                          </td>
-                                          <td>${{ item.subtotal }}</td>
-                                          <td>
-                                              <button class="btn btn-outline-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                          </td>
-                                      </tr>
-                                  {% endfor %}
-                              </tbody>
+                                {% for item in cart_items %}
+                                <tr data-item-id="{{ item.item.id }}">
+                                    <td>
+                                        <h5 class="mb-1">{{ item.item.custom_order.name }}</h5>
+                                        <p><strong>Fragrance Strength:</strong> {{ item.item.custom_order.fragrance_strength }}</p>
+                                        <p><strong>Engraving Text:</strong> {{ item.item.custom_order.engraving_text }}</p>
+                                        <p><strong>Price:</strong> ${{ item.item.custom_order.total_amount }}</p>
+                                    </td>
+                                    <td>
+                                        <div class="input-group input-group-sm" style="max-width: 120px;">
+                                            <button class="btn btn-outline-secondary btn-sm decrease-quantity">-</button>
+                                            <input type="text" class="form-control text-center" value="{{ item.item.quantity }}" readonly>
+                                            <button class="btn btn-outline-secondary btn-sm increase-quantity">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="subtotal">${{ item.subtotal }}</td>
+                                    <td class="text-center">
+                                        <svg class="icon trash-icon" width="25" height="25" style="color: black; cursor: pointer;">
+                                            <use href="#trash"></use>
+                                        </svg>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>                            
                           </table>
-                          <div class="d-flex justify-content-end mt-3">
-                              <div class="text-right">
-                                  <p><strong>Subtotal:</strong> ${{ cart_total }}</p>
-                                  <p><strong>Total:</strong> ${{ cart_total }}</p>
-                                  <button class="btn btn-primary">Proceed to Checkout</button>
-                              </div>
-                          </div>
                       {% else %}
                           <p>Your cart is empty.</p>
                       {% endif %}
                   </div>
               </div>
+  
+              <div class="col-lg-4">
+                  <div class="cart-summary border p-3 text-center">
+                      <h5 class="mb-3">Order Summary</h5>
+                      <p><strong>Subtotal:</strong> ${{ cart_total }}</p>
+                      <p><strong>Total:</strong> ${{ cart_total }}</p>
+                      <button class="btn btn-primary w-100">Proceed to Checkout</button>
+                  </div>
+              </div>
           </div>
       </div>
   </section>
+  
+  
+  
   
   
   
@@ -660,6 +665,65 @@
       </div>
     </div>
   </footer>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Fonction pour mettre à jour l'affichage des quantités
+        function updateCartItem(itemId) {
+    fetch(`/cart/add/${itemId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken, // N'oubliez pas d'inclure le token CSRF pour les requêtes POST
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+        // Mettez à jour l'interface utilisateur avec les nouvelles informations
+    })
+    .catch(error => {
+        console.error('There has been a problem with your fetch operation:', error);
+    });
+}
+
+
+        // Ajout d'événements pour augmenter et diminuer la quantité
+        document.querySelectorAll('.increase-quantity').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.closest('tr').dataset.itemId;
+                updateCartItem(itemId, `/cart/add/${itemId}/`);
+            });
+        });
+
+        document.querySelectorAll('.decrease-quantity').forEach(button => {
+            button.addEventListener('click', function() {
+                const itemId = this.closest('tr').dataset.itemId;
+                updateCartItem(itemId, `/cart/remove/${itemId}/`);
+            });
+        });
+
+        // Suppression d'un article
+        document.querySelectorAll('.trash-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const itemId = this.closest('tr').dataset.itemId;
+                fetch(`/cart/remove/${itemId}/`, {
+                    method: 'POST',
+                    headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    document.querySelector(`tr[data-item-id="${itemId}"]`).remove();
+                    document.querySelector('.cart-total').textContent = `$${data.cart_total}`;
+                });
+            });
+        });
+    });
+</script>
   <script src="{% static 'APP1/js/jquery.min.js' %}"></script>
   <script src="{% static 'APP1/js/plugins.js' %}"></script>
   <script src="{% static 'APP1/js/SmoothScroll.js' %}"></script>
