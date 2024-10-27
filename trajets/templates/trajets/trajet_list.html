@@ -470,7 +470,8 @@
                                 <tr>
                                     <th class="p-4 text-left text-xs font-semibold text-gray-800">Commande</th>
                                     <th class="p-4 text-left text-xs font-semibold text-gray-800">Temps Estimé</th>
-                                    <th class="p-4 text-left text-xs font-semibold text-gray-800">Points de Trafic</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-800">Départ</th>
+                                    <th class="p-4 text-left text-xs font-semibold text-gray-800">Arrivée</th>
                                     <th class="p-4 text-left text-xs font-semibold text-gray-800">Actions</th>
                                 </tr>
                             </thead>
@@ -479,7 +480,8 @@
                                 <tr class="hover:bg-gray-50">
                                     <td class="p-4 text-sm text-gray-800">{{ trajet.livraison.commande }}</td>
                                     <td class="p-4 text-sm text-gray-800">{{ trajet.temps_estime }}</td>
-                                    <td class="p-4 text-sm text-gray-800">{{ trajet.points_traffic }}</td>
+                                    <td class="p-4 text-sm text-gray-800">{{ trajet.point_de_depart }}</td>
+                                    <td class="p-4 text-sm text-gray-800">{{ trajet.point_d_arrivee }}</td>
                                     <td class="p-4">
                                         <button class="bg-green-500 mr-4" data-bs-toggle="modal" data-bs-target="#updateModal{{ trajet.pk }}" aria-label="Modifier">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
@@ -510,8 +512,12 @@
                                                         <input type="text" class="form-control" id="temps_estime{{ trajet.pk }}" name="temps_estime" value="{{ trajet.temps_estime }}" required>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="points_traffic{{ trajet.pk }}" class="form-label">Points de Trafic</label>
-                                                        <input type="text" class="form-control" id="points_traffic{{ trajet.pk }}" name="points_traffic" value="{{ trajet.points_traffic }}" required>
+                                                        <label for="point_de_depart{{ trajet.pk }}" class="form-label">Point de Départ</label>
+                                                        <input type="text" class="form-control" id="point_de_depart{{ trajet.pk }}" name="point_de_depart" value="{{ trajet.point_de_depart }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="point_d_arrivee{{ trajet.pk }}" class="form-label">Point d'Arrivée</label>
+                                                        <input type="text" class="form-control" id="point_d_arrivee{{ trajet.pk }}" name="point_d_arrivee" value="{{ trajet.point_d_arrivee }}" required>
                                                     </div>
                                                 </div>
                                                 <div class="modal-footer">
@@ -554,6 +560,7 @@
         </div>
     </div>
 </section>
+
 
 
 

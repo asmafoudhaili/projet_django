@@ -462,28 +462,23 @@
                         {% csrf_token %}
                         
                         <div class="mb-3">
-                            <label for="commande" class="form-label">Commande</label>
-                            {{ form.commande }}
+                            <label for="livraison" class="form-label">Livraison</label>
+                            {{ form.livraison }}
                         </div>
                         
                         <div class="mb-3">
-                            <label for="adresse_depart" class="form-label">Adresse de Départ</label>
-                            {{ form.adresse_depart }}
+                            <label for="point_de_depart" class="form-label">Adresse de Départ</label>
+                            {{ form.point_de_depart }}
                         </div>
                         
                         <div class="mb-3">
-                            <label for="adresse_arrivee" class="form-label">Adresse d'Arrivée</label>
-                            {{ form.adresse_arrivee }}
+                            <label for="point_d_arrivee" class="form-label">Adresse d'Arrivée</label>
+                            {{ form.point_d_arrivee }}
                         </div>
                         
                         <div class="mb-3">
-                            <label for="statut_trajet" class="form-label">Statut de Trajet</label>
-                            {{ form.statut_trajet }}
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="transporteur" class="form-label">Transporteur</label>
-                            {{ form.transporteur }}
+                            <label for="temps_estime" class="form-label">Temps Estimé</label>
+                            {{ form.temps_estime }}
                         </div>
                         
                         <button type="submit" class="btn btn-primary">Créer</button>
@@ -499,6 +494,7 @@
         </div>
     </div>
 </section>
+
 
 
 
