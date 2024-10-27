@@ -88,10 +88,16 @@ def custom_order_create(request):
         if form.is_valid():
             custom_order = form.save(commit=False)
             custom_order.client = request.user  # Associe automatiquement l’utilisateur connecté
-            custom_order.save()
-
+            
             # Calcul du prix estimé
             estimated_price = calculate_price(custom_order)
+            print(estimated_price)  # Vérifie si le prix est correct
+            
+            # Assigner le prix estimé au champ total_amount
+            custom_order.total_amount = estimated_price
+            
+            # Enregistrer la commande
+            custom_order.save()
 
             # Ajouter la commande au panier
             cart, created = Cart.objects.get_or_create(user=request.user)  # Récupérer ou créer le panier
@@ -123,6 +129,7 @@ def custom_order_create(request):
         return render(request, 'custom_order_form.html', {'form': form})
 
 
+
 def custom_order_update(request, pk):
     order = get_object_or_404(CustomOrder, pk=pk)
     if request.method == 'POST':
@@ -140,6 +147,3 @@ def custom_order_delete(request, pk):
         order.delete()
         return redirect('custom_order_list')
     return render(request, 'custom_order_confirm_delete.html', {'order': order})
-
-
-

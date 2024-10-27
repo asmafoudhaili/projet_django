@@ -26,8 +26,8 @@ class CustomOrderForm(forms.ModelForm):
         # Ajoutez d'autres notes de tête ici
     ], required=True, label="Top Notes")
     fragrance_strength = forms.ChoiceField(choices=[
-        ('eau_de_toilette', 'Eau de Toilette'),
-        ('eau_de_parfum', 'Eau de Parfum'),
+        ('eau de toilette', 'Eau de Toilette'),
+        ('eau de parfum', 'Eau de Parfum'),
         # Ajoutez d'autres forces de fragrance ici
     ], required=True, label="Fragrance Strength")
     number_of_bottles = forms.IntegerField(min_value=1, initial=1, label="Number of Bottles")  # Champ pour le nombre de bouteilles

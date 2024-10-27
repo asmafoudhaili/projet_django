@@ -679,50 +679,118 @@
     document.getElementById("createOrderBtn").addEventListener("click", function(event) {
         event.preventDefault();  // Empêche la soumission standard du formulaire
 
+        // Récupérer les valeurs du formulaire
+        const baseNotes = document.querySelector('select[name="base_notes"]').value;
+        const middleNotes = document.querySelector('select[name="middle_notes"]').value;
+        const topNotes = document.querySelector('select[name="top_notes"]').value;
+        const fragranceStrength = document.querySelector('select[name="fragrance_strength"]').value;
+        const numberOfBottles = parseInt(document.querySelector('input[name="number_of_bottles"]').value);
+        const engravingText = document.querySelector('input[name="engraving_text"]').value;
+        const fragranceChoice = document.querySelector('input[name="fragrance_choice"]').value;
+
+        // Vérifier les valeurs récupérées
+        console.log("Base Notes:", baseNotes);
+        console.log("Middle Notes:", middleNotes);
+        console.log("Top Notes:", topNotes);
+        console.log("Fragrance Strength:", fragranceStrength);
+        console.log("Number of Bottles:", numberOfBottles);
+        console.log("Engraving Text:", engravingText);
+        console.log("Fragrance Choice:", fragranceChoice);
+
+        // Validation de numberOfBottles
+        if (!numberOfBottles || isNaN(numberOfBottles)) {
+            alert("Please enter a valid number of bottles.");
+            return;
+        }
+
+        // Calculer le prix estimé selon la logique définie dans la vue
+        let estimatedPrice = calculateEstimatedPrice(baseNotes, middleNotes, topNotes, fragranceStrength, numberOfBottles, engravingText, fragranceChoice);
+
+        // Afficher le prix estimé dans la console avant de l'afficher dans le modal
+        console.log("Estimated Price before showing modal:", estimatedPrice);
+
         // Remplir le modal avec les données du formulaire
-        document.getElementById("reviewBaseNotes").textContent = document.querySelector('select[name="base_notes"]').value;
-        document.getElementById("reviewMiddleNotes").textContent = document.querySelector('select[name="middle_notes"]').value;
-        document.getElementById("reviewTopNotes").textContent = document.querySelector('select[name="top_notes"]').value;
-        document.getElementById("reviewFragranceStrength").textContent = document.querySelector('select[name="fragrance_strength"]').value;
-        document.getElementById("reviewNumberOfBottles").textContent = document.querySelector('input[name="number_of_bottles"]').value;
-        document.getElementById("reviewEngravingText").textContent = document.querySelector('input[name="engraving_text"]').value;
-        document.getElementById("reviewFragranceChoice").textContent = document.querySelector('input[name="fragrance_choice"]').value;
+        document.getElementById("reviewBaseNotes").textContent = baseNotes;
+        document.getElementById("reviewMiddleNotes").textContent = middleNotes;
+        document.getElementById("reviewTopNotes").textContent = topNotes;
+        document.getElementById("reviewFragranceStrength").textContent = fragranceStrength;
+        document.getElementById("reviewNumberOfBottles").textContent = numberOfBottles;
+        document.getElementById("reviewEngravingText").textContent = engravingText;
+        document.getElementById("reviewFragranceChoice").textContent = fragranceChoice;
+
+        // Afficher le prix estimé dans le modal
+        document.getElementById("reviewEstimatedPrice").textContent = estimatedPrice.toFixed(2); // Formatage à deux décimales
 
         // Affiche le modal
         new bootstrap.Modal(document.getElementById("orderReviewModal")).show();
     });
+
+    // Fonction pour calculer le prix estimé
+    function calculateEstimatedPrice(baseNotes, middleNotes, topNotes, fragranceStrength, numberOfBottles, engravingText, fragranceChoice) {
+        const basePricePerBottle = 20; // Prix de base par bouteille
+        let ingredientCost = 0;
+
+        // Coûts en fonction des notes de parfum
+        if (baseNotes) {
+            ingredientCost += 5; // Coût supplémentaire pour la base notes
+        }
+        if (middleNotes) {
+            ingredientCost += 3; // Coût supplémentaire pour les notes de cœur
+        }
+        if (topNotes) {
+            ingredientCost += 2; // Coût supplémentaire pour les notes de tête
+        }
+        
+        // Coût de la force du parfum
+        if (fragranceStrength) {
+            ingredientCost += 4; // Coût supplémentaire pour la force du parfum
+        }
+
+        // Coût pour l'engravement
+        const engravingCost = engravingText ? 5 : 0;
+
+        // Coût pour le choix de la fragrance
+        if (fragranceChoice) {
+            ingredientCost += 7; // Coût supplémentaire pour le choix de la fragrance
+        }
+
+        // Calcul du prix total
+        const totalPrice = (basePricePerBottle + ingredientCost + engravingCost) * numberOfBottles;
+        return totalPrice;
+    }
 
     // Gestionnaire d'événements pour le bouton "Submit Order" dans le modal
     document.getElementById("submitOrderBtn").addEventListener("click", function() {
         const formData = new FormData(document.getElementById("custom-order-form"));  // Récupère les données du formulaire
 
         fetch("{% url 'custom_order_create' %}", {
-    method: 'POST',
-    headers: {
-        'X-CSRFToken': '{{ csrf_token }}',
-    },
-    body: formData,  // Envoie les données du formulaire
-})
-.then(response => response.json())
-.then(data => {
-    if (data.success) {
-        // Vérifiez que SweetAlert fonctionne en essayant de l'appeler ici
-        swal({
-            title: "Success!",
-            text: "Your order has been submitted successfully!",
-            icon: "success",
-            button: "Okay",
-        });
-        bootstrap.Modal.getInstance(document.getElementById("orderReviewModal")).hide();
-        // Vous pouvez ajouter une redirection ou une mise à jour de la page ici
-    } else {
-        alert("Erreur lors de la soumission de la commande : " + data.error);
-    }
-})
-.catch(error => console.error("Erreur:", error));
-
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',
+            },
+            body: formData,  // Envoie les données du formulaire
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                swal({
+                    title: "Success!",
+                    text: "Your order has been submitted successfully!",
+                    icon: "success",
+                    button: "Okay",
+                });
+                bootstrap.Modal.getInstance(document.getElementById("orderReviewModal")).hide();
+                // Vous pouvez ajouter une redirection ou une mise à jour de la page ici
+            } else {
+                alert("Erreur lors de la soumission de la commande : " + data.error);
+            }
+        })
+        .catch(error => console.error("Erreur:", error));
     });
 </script>
+
+
+
 
 
   <script src="{% static 'APP1/js/jquery.min.js' %}"></script>
