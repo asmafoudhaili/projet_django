@@ -1,12 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User  # Import du modèle User de Django
-
+from perfumes.models import Perfume
 
 class Commande(models.Model):
     client = models.ForeignKey(User, on_delete=models.CASCADE)  # Relation avec User
-    liste_articles = models.TextField()  # Ou utilisez une relation ManyToManyField pour des articles spécifiques
-    total = models.DecimalField(max_digits=10, decimal_places=2)
-    
+    articles = models.ManyToManyField(Perfume, through='CommandeArticle')  # Relation ManyToMany avec un modèle intermédiaire
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
     STATUT_CHOICES = [
         ('en_cours', 'En cours'),
         ('terminee', 'Terminée'),
@@ -17,7 +17,15 @@ class Commande(models.Model):
 
     def __str__(self):
         return f"Commande de {self.client.username} - Total : {self.total}"
-    
+
+class CommandeArticle(models.Model):
+    commande = models.ForeignKey(Commande, on_delete=models.CASCADE)
+    parfum = models.ForeignKey(Perfume, on_delete=models.CASCADE)
+    quantite = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return f"{self.quantite} x {self.parfum.nom} dans la commande {self.commande.id}"
+
 class Paiement(models.Model):
     commande = models.OneToOneField(Commande, on_delete=models.CASCADE)
     methode_paiement = models.CharField(max_length=50)  

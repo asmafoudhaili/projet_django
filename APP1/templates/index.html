@@ -405,9 +405,35 @@
         <div class="col-3 col-lg-auto">
           <ul class="list-unstyled d-flex m-0">
             <li class="d-none d-lg-block">
-              <a href="index.html" class="text-uppercase mx-3">Wishlist <span class="wishlist-count">(0)</span>
-              </a>
-            </li>
+              <a href="#" id="paymentLink" class="text-uppercase mx-3">Payment <span class="wishlist-count">(0)</span></a>
+
+              <script>
+                  document.getElementById("paymentLink").addEventListener("click", function(event) {
+                      event.preventDefault(); // Empêche le lien de naviguer
+                      fetch('/payment/create-checkout-session/1/', { // Remplacez '1' par l'ID de la commande
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'X-CSRFToken': '{{ csrf_token }}', // Ajoutez le token CSRF si vous utilisez Django CSRF
+                          },
+                      })
+                      .then(response => response.json())
+                      .then(data => {
+                          if (data.id) {
+                              // Redirige vers Stripe Checkout
+                              window.location.href = `https://checkout.stripe.com/pay/${data.id}`;
+                          } else {
+                              console.error(data.error);
+                          }
+                      })
+                      .catch(error => console.error('Error:', error));
+                  });
+              </script>
+              
+              
+              
+              
+                          </li>
             <li class="d-none d-lg-block">
               <a href="index.html" class="text-uppercase mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
                 aria-controls="offcanvasCart">Cart <span class="cart-count">(0)</span>
