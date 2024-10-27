@@ -2,7 +2,7 @@ from django.db import models
 from livraisons.models import Livraison
 
 class TrajetLivraison(models.Model):
-    livraison = models.ForeignKey(Livraison, on_delete=models.CASCADE, related_name='trajets')
+    livraison = models.OneToOneField(Livraison, on_delete=models.CASCADE, related_name='trajet')
     temps_estime = models.DurationField()
     points_traffic = models.JSONField()  # Utilisé pour stocker les données de trafic sous forme JSON
 
