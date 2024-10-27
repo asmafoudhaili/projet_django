@@ -34,6 +34,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'perfumes',
     'auth_app',
+    'commande_perso',
+    'panier',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
