@@ -1,0 +1,49 @@
+<!-- templates/perfume_list.html -->
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Parfums</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> <!-- Bootstrap pour le style -->
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Liste des Parfums</h1>
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Marque</th>
+                    <th>Type</th>
+                    <th>Contenance</th>
+                    <th>Prix</th>
+                    <th>Disponibilité</th>
+                    <th>Quantité</th>
+                    <th>Image</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for perfume in perfumes %}
+                <tr>
+                    <td>{{ perfume.nom }}</td>
+                    <td>{{ perfume.marque }}</td>
+                    <td>{{ perfume.type }}</td>
+                    <td>{{ perfume.contenance }}</td>
+                    <td>{{ perfume.prix }}</td>
+                    <td>{{ perfume.quantite }}</td>
+                    <td>
+                        {% if perfume.image %}
+                            <img src="{{ perfume.image.url }}" alt="{{ perfume.nom }}" style="width: 100px; height: auto;">
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

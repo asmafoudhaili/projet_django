@@ -1,0 +1,28 @@
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Upload</button>
+</form>
+
+{% if description %}
+    <h3>Description from Uploaded Image:</h3>
+    <pre>{{ description }}</pre> <!-- Using <pre> to preserve formatting -->
+{% endif %}
+
+{% if matching_perfumes %}
+    <h3>Top Matches:</h3>
+    <ul>
+        {% for perfume in matching_perfumes %}
+            <li>
+                <strong>{{ perfume.nom }}</strong> - {{ perfume.marque }}<br>
+                Type: {{ perfume.type }}<br>
+                Prix: {{ perfume.prix }} €<br>
+                <img src="{{ perfume.image.url }}" alt="{{ perfume.nom }}" style="width: 100px;">
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    {% if description %}
+        <p>No matching perfumes found for the given description.</p>
+    {% endif %}
+{% endif %}

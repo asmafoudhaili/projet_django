@@ -1,0 +1,61 @@
+# Fichiers de base de données
+*.sqlite3
+
+# Fichiers et dossiers de l'environnement virtuel
+venv/
+env/
+.venv/
+ENV/
+env.bak/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Dossier de migration de Django
+*/migrations/*.py
+*/migrations/*.pyc
+!*/migrations/__init__.py
+
+# Configuration IDE (selon l'IDE utilisé)
+.vscode/
+.idea/
+
+# Fichiers de logs
+*.log
+
+# Fichiers de cache de Django
+staticfiles/
+media/
+*.mo
+*.pot
+
+# Fichiers d'environnement (variables secrètes)
+.env
+.env.*
+
+# Dossier de configuration local pour Heroku
+local_settings.py
+
+# Configuration de jetons, clés API, etc.
+config/settings/.env
+
+# Caches et autres fichiers temporaires
+*.tmp
+*.bak
+*.swp
+*.swo
+*.swn
+
+# Fichiers de paquets compressés
+*.tar.gz
+*.zip
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Ignorer les fichiers du système d'exploitation
+.DS_Store
+Thumbs.db

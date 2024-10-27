@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultat de la description de l'image</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Résultat de la description de l'image</h1>
+        
+        <!-- Afficher l'image uploadée -->
+        {% if image_url %}
+            <div>
+                <h2>Image Uploadée :</h2>
+                <img src="{{ image_url }}" alt="Uploaded Image" style="max-width: 400px;">
+            </div>
+        {% endif %}
+        
+        <!-- Afficher la description générée -->
+        <div>
+            <h2>Description générée :</h2>
+            <p>{{ description }}</p>
+        </div>
+        
+        <!-- Lien pour retourner à la page d'upload -->
+        <a href="{% url 'upload_image' %}">Retourner à la page d'upload</a>
+    </div>
+</body>
+</html>

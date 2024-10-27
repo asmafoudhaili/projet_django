@@ -1,0 +1,29 @@
+<!-- templates/personality_test.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personality Test</title>
+</head>
+<body>
+    <h1>Personality Test</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {% for question in questions %}
+            <div>
+                <h3>{{ question.text }}</h3>
+                <label>
+                    <input type="radio" name="question_{{ question.id }}" value="yes" required>
+                    Yes
+                </label>
+                <label>
+                    <input type="radio" name="question_{{ question.id }}" value="no" required>
+                    No
+                </label>
+            </div>
+        {% endfor %}
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

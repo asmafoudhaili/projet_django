@@ -1,0 +1,30 @@
+{% load custom_filters %}  <!-- Load custom filters here -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Test</title>
+</head>
+<body>
+    <h1>Update Your Test Responses</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {% for question in questions %}
+            <label>{{ question.text }}</label><br>
+            <input type="radio" name="question_{{ question.id }}" value="yes" 
+                   {% if previous_responses|get_item:question.id == 'yes' %}checked{% endif %}> Yes
+            <input type="radio" name="question_{{ question.id }}" value="no" 
+                   {% if previous_responses|get_item:question.id == 'no' %}checked{% endif %}> No
+            <br><br>
+        {% endfor %}
+        <button type="submit">Update and View New Result</button>
+    </form>
+    <h1>Résultat du Test de Personnalité</h1>
+<p>Type de Personnalité : {{ request.session.test_result.personality_type }}</p>
+<p>Score : {{ request.session.test_result.score }}</p>
+<p>Parfum Recommandé : {{ request.session.test_result.recommended_perfume }}</p>
+
+</body>
+</html>
