@@ -55,3 +55,5 @@ def order_perfume(request):
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     
     return JsonResponse({'status': 'error', 'message': 'Requête non autorisée'}, status=405)
+
+

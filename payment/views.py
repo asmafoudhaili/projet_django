@@ -1,47 +1,62 @@
 
 import stripe
 from django.conf import settings
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import Commande, Paiement, CommandeArticle
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-
+@require_POST
 def create_checkout_session(request, commande_id):
-    if request.method == 'POST':  # Vérifiez que c'est une requête POST
-        try:
-            commande = Commande.objects.get(id=commande_id)
+    commande = get_object_or_404(Commande, id=commande_id)
 
-            # Créez la session de paiement Stripe
-            checkout_session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                line_items=[{
-                    'price_data': {
-                        'currency': 'usd',
-                        'product_data': {
-                            'name': f'Commande {commande.id}',
-                        },
-                        'unit_amount': int(commande.total * 100),  # Montant en centimes
-                    },
-                    'quantity': 1,
-                }],
-                mode='payment',
-                success_url=request.build_absolute_uri('/payment/success/'),
-                cancel_url=request.build_absolute_uri('/payment/cancel/'),
-            )
-            return JsonResponse({'id': checkout_session.id})  # Retourne l'ID de la session
-        except Commande.DoesNotExist:
-            return JsonResponse({'error': 'Commande not found.'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
+    # Enregistrer le paiement dans la base de données avant de créer la session Stripe
+    paiement = Paiement.objects.create(
+        commande=commande,
+        methode_paiement='Stripe',  # Vous pouvez ajuster cela si vous avez plusieurs méthodes de paiement
+    )
 
-    return JsonResponse({'error': 'Only POST requests are accepted.'}, status=400) 
+    # Créez les items de ligne pour Stripe
+    line_items = []
+    for article in commande.commandearticle_set.all():
+        line_items.append({
+            'price_data': {
+                'currency': 'usd',  # Remplacez par votre devise
+                'product_data': {
+                    'name': article.parfum.nom,  # Remplacez par le nom de votre produit
+                },
+                'unit_amount': int(article.parfum.prix * 100),  # Montant en cents
+            },
+            'quantity': article.quantite,
+        })
 
-def success_view(request):
-    return render(request, 'payment/success.html')
+    # Créer une session de paiement Stripe
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=line_items,
+        mode='payment',
+        success_url='http://localhost:8000/payment/success/',  # URL de succès
+        cancel_url='http://localhost:8000/payment/cancel/',    # URL d'annulation
+    )
 
-def cancel_view(request):
-    return render(request, 'payment/cancel.html')
+    # Mettre à jour le statut du paiement après la création de la session
+    paiement.statut_paiement = 'en_attente'  # Statut initial
+    paiement.save()
 
+    # Rediriger l'utilisateur vers la session de paiement Stripe
+    return redirect(checkout_session.url, code=303)
+    # views.py
+
+def success(request):
+    return render(request, 'success.html')
+
+def cancel(request):
+    return render(request, 'cancel.html')
+
+
+def commande_detail(request, commande_id):
+    commande = get_object_or_404(Commande, id=commande_id)
+    return render(request, 'commande_detail.html', {'commande': commande})

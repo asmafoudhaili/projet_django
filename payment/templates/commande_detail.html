@@ -1,0 +1,23 @@
+<!-- commande_detail.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de la Commande</title>
+</head>
+<body>
+    <h2>Détails de la Commande</h2>
+    <ul>
+        {% for article in commande.commandearticle_set.all %}
+            <li>{{ article.quantite }} x {{ article.parfum.nom }} - ${{ article.parfum.prix }}</li>
+        {% endfor %}
+    </ul>
+    <p>Total : ${{ commande.total }}</p>
+
+    <form action="{% url 'create-checkout-session' commande.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">Payer</button>
+    </form>
+</body>
+</html>
