@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prédiction des revenus</title>
+</head>
+<body>
+    <h1>Prédiction des revenus mensuels</h1>
+
+    <!-- Affichage de la prédiction et de l'interprétation -->
+    <div>
+        <h2>Prévision des revenus</h2>
+        <p>Revenu prévisionnel : {{ predicted_revenue }} USD</p>
+
+        <h2>Interprétation</h2>
+        <p>{{ interpretation }}</p>
+    </div>
+
+    <!-- Affichage du graphique -->
+    <div>
+        <h2>Graphique des revenus mensuels</h2>
+        <img src="data:image/png;base64,{{ graph }}" alt="Graphique des revenus mensuels">
+    </div>
+</body>
+</html>

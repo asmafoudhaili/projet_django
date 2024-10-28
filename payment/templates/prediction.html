@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Prédiction des Gains</title>
+</head>
+<body>
+    <h1>Prédiction des Gains du Mois Suivant</h1>
+    <p><strong>Montant Prévu :</strong> {{ predicted_revenue }}</p>
+    <h2>Analyse :</h2>
+    <p>{{ interpretation }}</p>
+    
+    <!-- Afficher le graphique -->
+    <h2>Graphique des Revenus Mensuels :</h2>
+    <img src="data:image/png;base64,{{ graph }}" alt="Graphique des Revenus" />
+</body>
+</html>
