@@ -13,8 +13,8 @@ from PIL import Image
 from ollama import generate
 from .models import Perfume, Description
 import json
-import spacy
-nlp = spacy.load("en_core_web_sm")  # Or the appropriate model for your language
+# import spacy
+# nlp = spacy.load("en_core_web_sm")  # Or the appropriate model for your language
 
 # Chargement ou création du fichier CSV pour sauvegarder les descriptions
 def load_or_create_dataframe(filename):
@@ -109,7 +109,7 @@ def upload_image(request):
 
             # Process the uploaded image to get the description
             description = recommanded_process_image(image)  # Generate the description from the image
-            matching_perfumes = compare_with_database(description)  # Compare with the database
+            # matching_perfumes = compare_with_database(description)  # Compare with the database
 
             # Prepare to display the description and any matching perfumes
             return render(request, 'upload.html', {
@@ -124,41 +124,41 @@ def upload_image(request):
 
 
 
-def compare_with_database(description):
-    # Parse the description with SpaCy
-    doc = nlp(description)
+# def compare_with_database(description):
+#     # Parse the description with SpaCy
+#     doc = nlp(description)
     
-    # Extract keywords and create a set of tokens from the description
-    description_tokens = set(token.lemma_.lower() for token in doc if not token.is_stop)
+#     # Extract keywords and create a set of tokens from the description
+#     description_tokens = set(token.lemma_.lower() for token in doc if not token.is_stop)
 
-    # Initialize a list for scoring
-    scores = []
+#     # Initialize a list for scoring
+#     scores = []
 
-    # Fetch all perfumes from the database
-    perfumes = Perfume.objects.all()
+#     # Fetch all perfumes from the database
+#     perfumes = Perfume.objects.all()
     
-    for perfume in perfumes:
-        # Concatenate attributes into a single string
-        perfume_attributes = f"{perfume.nom} {perfume.marque} {perfume.type} " \
-                             f"{perfume.contenance} {perfume.notes_de_tete} " \
-                             f"{perfume.notes_de_coeur} {perfume.notes_de_fond} " \
-                             f"{perfume.ingredients} {perfume.design} {perfume.forme}"
+#     for perfume in perfumes:
+#         # Concatenate attributes into a single string
+#         perfume_attributes = f"{perfume.nom} {perfume.marque} {perfume.type} " \
+#                              f"{perfume.contenance} {perfume.notes_de_tete} " \
+#                              f"{perfume.notes_de_coeur} {perfume.notes_de_fond} " \
+#                              f"{perfume.ingredients} {perfume.design} {perfume.forme}"
         
-        # Tokenize the concatenated perfume attributes
-        perfume_doc = nlp(perfume_attributes)
-        perfume_tokens = set(token.lemma_.lower() for token in perfume_doc if not token.is_stop)
+#         # Tokenize the concatenated perfume attributes
+#         perfume_doc = nlp(perfume_attributes)
+#         perfume_tokens = set(token.lemma_.lower() for token in perfume_doc if not token.is_stop)
 
-        # Calculate similarity score using Jaccard similarity
-        intersection = description_tokens.intersection(perfume_tokens)
-        union = description_tokens.union(perfume_tokens)
-        jaccard_score = len(intersection) / len(union) if len(union) > 0 else 0
+#         # Calculate similarity score using Jaccard similarity
+#         intersection = description_tokens.intersection(perfume_tokens)
+#         union = description_tokens.union(perfume_tokens)
+#         jaccard_score = len(intersection) / len(union) if len(union) > 0 else 0
         
-        scores.append((perfume, jaccard_score))
+#         scores.append((perfume, jaccard_score))
 
-    # Sort perfumes by score in descending order and get the top 2
-    top_matches = sorted(scores, key=lambda x: x[1], reverse=True)[:2]
+#     # Sort perfumes by score in descending order and get the top 2
+#     top_matches = sorted(scores, key=lambda x: x[1], reverse=True)[:2]
     
-    return [match[0] for match in top_matches]  # Return only the matching perfumes
+#     return [match[0] for match in top_matches]  # Return only the matching perfumes
 
 def is_admin(user):
     return user.is_authenticated and user.is_staff  # Vérifie si l'utilisateur est authentifié et un membre du personnel

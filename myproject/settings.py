@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'perfumes',
+    'livraisons',
+    'trajets',
      'question',
     'personalityperfume',
     'auth_app',
@@ -43,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'APP1',
+    
 ]
 
 MIDDLEWARE = [
