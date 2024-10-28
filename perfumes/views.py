@@ -3,6 +3,9 @@ from django.contrib.auth.decorators import user_passes_test
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PerfumeImageUploadForm, PerfumeForm
+from .forms import DescriptionForm
+from django.views.decorators.csrf import csrf_exempt
+
 import pandas as pd
 import os
 from io import BytesIO
@@ -176,7 +179,7 @@ def create_perfume(request):
             # Créer une nouvelle description
             Description.objects.create(perfume=new_perfume, description=description_text)
             
-            return redirect('perfume_list')  # Redirigez vers la liste des parfums ou une autre page
+            return redirect('/')  # Redirigez vers la liste des parfums ou une autre page
     else:
         form = PerfumeForm()
 
@@ -214,3 +217,38 @@ def perfume_delete(request, perfume_id):
         perfume.delete()
         return redirect('perfume_list')
     return render(request, 'perfume_confirm_delete.html', {'perfume': perfume})
+
+def description_list(request):
+    descriptions = Description.objects.all()
+    return render(request, 'description_list.html', {'descriptions': descriptions})
+
+def description_list(request):
+    descriptions = Description.objects.all()
+    perfumes = Perfume.objects.all()  # Assurez-vous d'obtenir tous les parfums
+    return render(request, 'description_list.html', {'descriptions': descriptions, 'perfumes': perfumes})
+
+def description_create(request):
+    if request.method == 'POST':
+        form = DescriptionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('description_list')
+    return redirect('description_list')
+
+def description_update(request, id):
+    description = get_object_or_404(Description, pk=id)
+    if request.method == 'POST':
+        description.perfume_id = request.POST['perfume']
+        description.description = request.POST['description']
+        description.save()
+        return redirect('description_list')  # Redirect after update
+    return render(request, 'your_template.html', {'description': description})
+
+def description_delete(request, pk):
+    description = get_object_or_404(Description, pk=pk)
+    if request.method == 'POST':
+        description.delete()
+        return redirect('description_list')
+    return render(request, 'description_confirm_delete.html', {'description': description})
+
+    

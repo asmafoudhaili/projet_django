@@ -128,7 +128,7 @@ def update_password(request, token, uid):
         user_id = urlsafe_base64_decode(uid)
         decode_uid = codecs.decode(user_id, "utf-8")
         user = User.objects.get(id=decode_uid)
-    except:
+    except User.DoesNotExist:
         return HttpResponseForbidden(
             "Vous n'aviez pas la permission de modifier ce mot de pass. Utilisateur introuvable"
         )
@@ -136,7 +136,7 @@ def update_password(request, token, uid):
     check_token = default_token_generator.check_token(user, token)
     if not check_token:
         return HttpResponseForbidden(
-            "Vous n'aviez pas la permission de modifier ce mot de pass. Votre Token est invalid ou a espiré"
+            "Vous n'aviez pas la permission de modifier ce mot de pass. Votre Token est invalid ou a expiré"
         )
 
     error = False
@@ -145,7 +145,6 @@ def update_password(request, token, uid):
     if request.method == "POST":
         password = request.POST.get("password")
         repassword = request.POST.get("repassword")
-        print(password, repassword)
         if repassword == password:
             try:
                 validate_password(password, user)
@@ -153,13 +152,16 @@ def update_password(request, token, uid):
                 user.save()
 
                 success = True
-                message = "votre mot de pass a été modifié avec succès!"
+                message = "Votre mot de passe a été modifié avec succès!"
+
+                # Redirect to the login page after password change
+                return redirect('sing_in')  # Ensure this matches your login URL name
             except ValidationError as e:
                 error = True
                 message = str(e)
         else:
             error = True
-            message = "Les deux mot de pass ne correspondent pas"
+            message = "Les deux mots de passe ne correspondent pas."
 
     context = {"error": error, "success": success, "message": message}
 

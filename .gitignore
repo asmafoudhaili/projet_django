@@ -26,7 +26,6 @@ __pycache__/
 
 # Fichiers de cache de Django
 staticfiles/
-media/
 *.mo
 *.pot
 
