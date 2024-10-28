@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -45,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'APP1',
-    
+    'payment',
 ]
 
 MIDDLEWARE = [
@@ -155,3 +156,7 @@ ANYMAIL = {
 }
 LOGIN_URL = '/http://127.0.0.1:8000/login'  # L'URL de redirection pour la page de connexion
 LOGIN_REDIRECT_URL = '/http://127.0.0.1:8000/'  # L'URL de redirection après connexion réussie
+
+
+STRIPE_SECRET_KEY = "sk_test_51QEJMeK3gFlzanmEruxPjucTxto9J7PWU1fZyrK9XCjXky2pI7hEVNvAI9Enwv0TQyBk9mgFEYZpL66IK1FQHVEl00YXYHbtgC"
+STRIPE_PUBLISHABLE_KEY = "pk_test_51QEJMeK3gFlzanmE3FREvE0dMvZObusgMMosh3bQVpSLS56eNQk162ajQUJXnjTyPqdHQ4y43G1SrREXq5qh1AKr00uzw776S4"

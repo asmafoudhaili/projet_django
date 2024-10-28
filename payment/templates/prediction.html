@@ -1,8 +1,6 @@
 {% load static %}
-{% load custom_filters %}  <!-- Load custom filters here -->
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
   <title>Kaira - Bootstrap 5 Fashion Store HTML CSS Template</title>
@@ -445,155 +443,28 @@
     </div>
   </nav>
 
-  <section class="bg-light py-5">
-    
-    <div class="container card">
-        
-            <h3>Update Your Test Responses</h3>
-            <form method="POST">
-                {% csrf_token %}
-                {% for question in questions %}
-                    <div class="question">
-                        <h5>{{ question.text }}</h5>
-                        <label>
-                            <input type="radio" name="question_{{ question.id }}" value="yes" 
-                                   {% if previous_responses|get_item:question.id == 'yes' %}checked{% endif %}>
-                                   <span class="radio-label">Yes</span>
-                        </label>
-                        <label>
-                            <input type="radio" name="question_{{ question.id }}" value="no" 
-                                   {% if previous_responses|get_item:question.id == 'no' %}checked{% endif %}>
-                                   <span class="radio-label">No</span>
-                        </label>
-                    </div>
-                {% endfor %}
-                <button type="submit" class="submit-btn">Update and View New Result</button>
-            </form>
-        </div>
-        <div class="result-card">
-            <h1>RÃ©sultat du Test de PersonnalitÃ©</h1>
-            <p>Type de PersonnalitÃ© : {{ request.session.test_result.personality_type }}</p>
-            <p>Score : {{ request.session.test_result.score }}</p>
-        </div>
-        
-        <style>
-        /* Style de la carte pour le rÃ©sultat */
-        .result-card {
-            max-width: 500px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            text-align: center;
-        }
-        
-        .result-card h1 {
-            font-size: 24px;
-            color: #333;
-            margin-bottom: 15px;
-        }
-        
-        .result-card p {
-            font-size: 18px;
-            color: #555;
-            margin: 10px 0;
-        }
-        </style>
-        
-     
-    <style>
-    /* Center card and set styles */
-    .container.card {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #f9f9f9;
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        border-radius: 10px;
-        text-align: center;
-    }
-    
-    h2 {
-        margin-bottom: 20px;
-        color: #333;
-    }
-    
-    /* Question container */
-    .question {
-        margin-bottom: 15px;
-    }
-    
-    /* Radio button styling */
-    .radio-container {
-        display: inline-block;
-        margin-right: 15px;
-        position: relative;
-        padding-left: 30px;
-        cursor: pointer;
-        font-size: 16px;
-        color: #555;
-    }
-    
-    .radio-container input[type="radio"] {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-    }
-    
-    .radio-container .radio-label:before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 3px;
-        width: 18px;
-        height: 18px;
-        border: 2px solid #7c4d28;
-        border-radius: 50%;
-        background-color: #fff;
-    }
-    
-    .radio-container input[type="radio"]:checked + .radio-label:before {
-        background-color: #7c4d28;
-    }
-    
-    .radio-container input[type="radio"]:checked + .radio-label:after {
-        content: "";
-        position: absolute;
-        left: 5px;
-        top: 10px;
-        width: 8px;
-        height: 8px;
-        background-color: #fff;
-        border-radius: 50%;
-    }
-    
-    /* Submit button styling */
-    .submit-btn {
-        margin-top: 20px;
-        padding: 10px 20px;
-        background-color: #7c4d28;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-    }
-    
-    .submit-btn:hover {
-        background-color: #7c4d28;
-    }
-    </style>
-    
-</section>
-
   
- 
 
  
 
-  <footer id="footer" class="mt-5">
+    <meta charset="UTF-8">
+    <title>Prédiction des Gains</title>
+</head>
+<body>
+    <h1>Prédiction des Gains du Mois Suivant</h1>
+    <p><strong>Montant Prévu :</strong> {{ predicted_revenue }}</p>
+    <h2>Analyse :</h2>
+    <p>{{ interpretation }}</p>
+    
+    <!-- Afficher le graphique -->
+    <h2>Graphique des Revenus Mensuels :</h2>
+    <img src="data:image/png;base64,{{ graph }}" alt="Graphique des Revenus" />
+</body>
+</html>
+
+
+
+<footer id="footer" class="mt-5">
     <div class="container">
       <div class="row d-flex flex-wrap justify-content-between py-5">
         <div class="col-md-3 col-sm-6">
@@ -723,7 +594,7 @@
             </div>
           </div>
           <div class="col-md-6 text-end">
-            <p>Â© Copyright 2022 Kaira. All rights reserved. Design by <a href="https://templatesjungle.com"
+            <p>© Copyright 2022 Kaira. All rights reserved. Design by <a href="https://templatesjungle.com"
                 target="_blank">TemplatesJungle</a> Distribution By <a href="https://themewagon.com"
               target="blank">ThemeWagon</a></p>
           </div>

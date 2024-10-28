@@ -26,6 +26,7 @@ urlpatterns = [
     path('trajets/', include('trajets.urls')),     
     path('perfumes/', include('perfumes.urls')),
     path('personality-test/', include('question.urls')),
+    path('payment/', include('payment.urls')),
 
 
 ]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
