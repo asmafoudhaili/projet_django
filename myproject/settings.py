@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'perfumes',
+     'question',
+    'personalityperfume',
     'auth_app',
     'django.contrib.admin',
     'django.contrib.auth',
