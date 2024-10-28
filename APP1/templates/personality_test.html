@@ -1,29 +1,147 @@
-<!-- templates/personality_test.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personality Test</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2; /* Light grey background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+            padding: 30px;
+            background-color: #ffffff;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            border: 1px solid #d1d1d1;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+            font-size: 28px;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Question styling */
+        .question {
+            margin: 15px 0;
+            padding: 15px 0;
+            border-bottom: 1px solid #d1d1d1;
+        }
+
+        .question h3 {
+            font-size: 18px;
+            margin: 0 0 12px;
+            color: #4a4a4a;
+        }
+
+        /* Custom radio button styling */
+        .question label {
+            display: inline-flex;
+            align-items: center;
+            font-size: 16px;
+            color: #6e6e6e;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+
+        .question input[type="radio"] {
+            display: none; /* Hide default radio button */
+        }
+
+        .question input[type="radio"] + span {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
+            border-radius: 50%;
+            border: 2px solid #7a7a7a; /* Grey border */
+            margin-right: 8px;
+            transition: background-color 0.3s, border-color 0.3s;
+            position: relative;
+        }
+
+        .question input[type="radio"]:checked + span {
+            background-color: #7a7a7a; /* Fill color when selected */
+            border-color: #7a7a7a;
+        }
+
+        /* Inner circle for checked effect */
+        .question input[type="radio"]:checked + span::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: #ffffff; /* White inner circle */
+            position: absolute;
+            top: 3px;
+            left: 3px;
+        }
+
+        /* Submit button */
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #7a7a7a;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #5e5e5e;
+            transform: translateY(-2px);
+        }
+
+        button[type="submit"]:active {
+            transform: translateY(1px);
+            background-color: #4d4d4d;
+        }
+    </style>
 </head>
 <body>
-    <h1>Personality Test</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {% for question in questions %}
-            <div>
-                <h3>{{ question.text }}</h3>
-                <label>
-                    <input type="radio" name="question_{{ question.id }}" value="yes" required>
-                    Yes
-                </label>
-                <label>
-                    <input type="radio" name="question_{{ question.id }}" value="no" required>
-                    No
-                </label>
-            </div>
-        {% endfor %}
-        <button type="submit">Submit</button>
-    </form>
+    <div class="container">
+        <h1>Personality Test</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div class="question">
+                    <h3>{{ question.text }}</h3>
+                    <label>
+                        <input type="radio" name="question_{{ question.id }}" value="yes" required>
+                        <span></span> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="question_{{ question.id }}" value="no" required>
+                        <span></span> No
+                    </label>
+                </div>
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
 </body>
 </html>

@@ -1,12 +1,21 @@
 from django.shortcuts import render, redirect , get_object_or_404
 from django.core.exceptions import MultipleObjectsReturned
+import requests
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
+from django.conf import settings  # Import settings
 from .models import Question, Choice, TestResult,Response
 from django.contrib.auth.decorators import login_required
 from personalityperfume.models import PersonalityPerfume
 from django.http import Http404
 from django.contrib import messages
 from .models import TestResult
+import speech_recognition as sr
+import json
+
+
+
 
 @login_required
 def personality_test(request):
@@ -206,7 +215,6 @@ def get_corresponding_perfume(personality_type):
 
 
 
-
 @login_required
 def test_result(request, personality_type):
     result = request.session.get('test_result')  # Retrieve the test results from the session
@@ -220,11 +228,13 @@ def test_result(request, personality_type):
     except PersonalityPerfume.DoesNotExist:
         raise Http404("No perfume matching this personality type.")
 
+    
     context = {
         'result': result,
-        'perfume': perfume
+        'perfume': perfume,
     }
-    return render(request, 'test_result.html', context)
+    
+    return render(request, 'test_result.html',context)
 
 def delete_test(request):
     # Vérifiez si l'utilisateur a un résultat de test
@@ -238,3 +248,40 @@ def delete_test(request):
     
     # Redirigez vers la page d'accueil ou une autre page appropriée
     return redirect('personality_test')  # Remplacez 'home' par l'URL de redirection souhaitée
+
+
+
+
+
+# Define the available personalities
+personalities = {
+    "Rêveur (Imagineur)": ["dream", "imagine", "creative"],
+    "Empathique": ["caring", "sensitive", "empathize"],
+    "Persévérant": ["determined", "strong", "steady"],
+    "Travaillomane (Analyseur)": ["analytical", "detailed", "methodical"],
+    "Promoteur": ["enthusiastic", "energetic", "lively"],
+    "Rebelle (Energiseur)": ["independent", "bold", "daring"]
+}
+
+def analyze_personality(description):
+    # Analyzing the description to determine the personality
+    for personality, keywords in personalities.items():
+        if any(keyword in description.lower() for keyword in keywords):
+            return personality
+    return "Unknown personality"
+    
+@csrf_exempt  # Disable CSRF protection for this view (only if necessary)
+def capture_voice_input(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        description = data.get("description", "")
+        personality = analyze_personality(description)
+        
+        # Log for debugging
+        print("Transcript:", description)
+        print("Personality:", personality)
+
+        # Return both the transcript and personality in the JSON response
+        return JsonResponse({"transcript": description, "personality": personality})
+    
+    return JsonResponse({"error": "Invalid request"}, status=400)
