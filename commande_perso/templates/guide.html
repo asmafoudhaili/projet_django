@@ -464,32 +464,33 @@
                 {% endif %}
 
                 {% if suggestions %}
-                    <h2>Suggestions:</h2>
-                    <ul>
+                    <h2 class="mt-4">Suggestions:</h2>
+                    <div class="d-flex flex-wrap gap-3 justify-content-center">
                         {% for combination in suggestions %}
-                            <li>{{ combination }}</li>
+                            <div class="suggestion-item bg-white shadow-sm p-3 rounded" style="width: 200px;">
+                                {{ combination }}
+                            </div>
                         {% endfor %}
-                    </ul>
+                    </div>
                 {% endif %}
 
                 {% if existing_perfumes %}
-                    <h2>Existing Perfumes:</h2>
-                    <ul>
+                    <h2 class="mt-5">Existing Perfumes:</h2>
+                    <div class="d-flex flex-wrap gap-3 justify-content-center">
                         {% for perfume in existing_perfumes %}
-                            <li>
-                                <strong>{{ perfume.Nom }}</strong><br>
-                                {% if perfume.Image %}
-                                    <img src="{{ perfume.Image }}" alt="{{ perfume.Nom }}" width="100"><br>
-                                {% endif %}
-                                Description: {{ perfume.Description }}
-                            </li>
+                            <div class="perfume-item bg-light p-3 rounded shadow-sm" style="width: 200px;">
+                                <strong>{{ perfume.Name }}</strong><br>
+                                <em>{{ perfume.Brand }}</em><br>
+                                <p>Description: {{ perfume.Description|truncatechars:100 }}</p>
+                            </div>
                         {% endfor %}
-                    </ul>
+                    </div>
                 {% endif %}
             </div>
         </div>
     </div> 
 </section>
+
 
 
 

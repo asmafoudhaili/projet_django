@@ -91,10 +91,20 @@ class FragranceAI:
         found_perfumes = []
         for combination in suggested_combinations:
             notes = combination.split(' + ')
+            
+            # Filtrer les parfums correspondant aux combinaisons de notes
             matching_perfumes = self.data[self.data['Notes'].apply(lambda x: all(note.strip() in x for note in notes))]
-            found_perfumes.extend(matching_perfumes.head(limit).to_dict(orient='records'))
-        print("Found perfumes:", found_perfumes)  # Debugging line
+            
+            # Extraire les informations nécessaires pour chaque parfum trouvé
+            for _, perfume in matching_perfumes.head(limit).iterrows():
+                found_perfumes.append({
+                    'Name': perfume['Name'],
+                    'Brand': perfume['Brand'],
+                    'Description': perfume['Description'],
+                    'Image': perfume['Image URL']
+                })
         return found_perfumes[:limit]
+
 
 # Example usage
 if __name__ == "__main__":
@@ -108,7 +118,8 @@ if __name__ == "__main__":
     # Find and display existing perfumes based on the suggestions
     existing_perfumes = fragrance_ai.find_existing_perfumes(suggestions, limit=5)
     for perfume in existing_perfumes:
-        print(f"Name: {perfume['Nom']}")
+        print(f"Name: {perfume['Name']}")
+        print(f"Brand: {perfume['Brand']}")
         print(f"Description: {perfume['Description']}")
         if perfume['Image']:
             print(f"Image: {perfume['Image']}")
