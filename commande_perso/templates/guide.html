@@ -445,7 +445,7 @@
     </div>
   </nav>
 
-  <section id="perfume-billboard" class="bg-light py-5"> 
+  <section id="perfume-billboard" class="bg-light py-5">
     <div class="container">
         <div class="row justify-content-center">
             <h1 class="section-title text-center mt-4">
@@ -455,9 +455,13 @@
                 <p>Explore unexpected blends and find your next favorite scent.</p>
                 <form id="custom-order-form" method="post" class="d-flex flex-wrap gap-2">
                     {% csrf_token %}
-                    <input type="text" name="fragrance_choice"  placeholder="Enter fragrance choice" class="form-control form-control-lg mb-2" />
+                    <input type="text" name="fragrance_choice" placeholder="Enter fragrance choice" class="form-control form-control-lg mb-2" />
                     <button type="submit" class="btn btn-dark btn-lg text-uppercase w-100">Show suggestions</button>
                 </form>
+
+                {% if error %}
+                    <div class="alert alert-danger mt-3">{{ error }}</div>
+                {% endif %}
 
                 {% if suggestions %}
                     <h2>Suggestions:</h2>
@@ -467,10 +471,26 @@
                         {% endfor %}
                     </ul>
                 {% endif %}
+
+                {% if existing_perfumes %}
+                    <h2>Existing Perfumes:</h2>
+                    <ul>
+                        {% for perfume in existing_perfumes %}
+                            <li>
+                                <strong>{{ perfume.Nom }}</strong><br>
+                                {% if perfume.Image %}
+                                    <img src="{{ perfume.Image }}" alt="{{ perfume.Nom }}" width="100"><br>
+                                {% endif %}
+                                Description: {{ perfume.Description }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
             </div>
         </div>
     </div> 
 </section>
+
 
 
 

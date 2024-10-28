@@ -1,69 +1,115 @@
 import pandas as pd
 import itertools
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import MultiLabelBinarizer
+import numpy as np
+import re
 
-class FragranceDataManagement:
+class FragranceAI:
     def __init__(self, filepath):
         self.filepath = filepath
         self.data = self.load_data()
-        self.combinations_df = None
-        self.create_note_combinations()
+        self.model = None
+        self.mlb = MultiLabelBinarizer()
+        self.train_model()
 
     def load_data(self):
-        """Charger les données à partir du fichier CSV."""
+        """Load and prepare the data for the AI."""
         try:
-            # Essayez avec un encodage alternatif comme ISO-8859-1 ou Windows-1252
-            data = pd.read_csv(self.filepath, encoding='ISO-8859-1')  # Remplacez par 'windows-1252' si nécessaire
-            print(f"Données chargées : {len(data)} lignes.")
-
-            # Nettoyer les noms de colonnes pour enlever les espaces
-            data.columns = data.columns.str.strip()
-            print("Colonnes dans le DataFrame :", data.columns.tolist())  # Affiche les colonnes
+            data = pd.read_csv(self.filepath, encoding='ISO-8859-1')
+            data.columns = data.columns.str.strip()  # Remove whitespace from column names
+            print(f"Data loaded successfully: {data.shape[0]} rows, {data.shape[1]} columns")
             return data
         except Exception as e:
-            print(f"Erreur lors du chargement des données : {e}")
-            return pd.DataFrame()  # Retourne un DataFrame vide en cas d'erreur
+            print(f"Error loading data: {e}")
+            return pd.DataFrame()
 
-    def create_note_combinations(self):
-        """Créer toutes les combinaisons possibles de notes."""
+    def create_training_data(self):
+        """Create training data for the model."""
         if 'Notes' in self.data.columns:
-            # Extraire et nettoyer les notes
-            unique_notes = self.data['Notes'].str.cat(sep=',').split(',')
-            unique_notes = [note.strip() for note in set(unique_notes) if note.strip() and "Click Here" not in note]
-
-            # Créer toutes les combinaisons possibles de notes
-            self.combinations_df = pd.DataFrame(
-                list(itertools.combinations(unique_notes, 2)),
-                columns=['Note_1', 'Note_2']
-            )
-            print(f"Combinaisons de notes créées : {len(self.combinations_df)}")
+            self.data['Notes'] = self.data['Notes'].fillna('')
+            notes_data = self.data['Notes'].str.split(',').apply(lambda x: [note.strip() for note in x if note.strip()])
+            combinations = notes_data.apply(lambda notes: list(itertools.combinations(notes, 3)))
+            training_data = combinations.explode().dropna().tolist()
+            return training_data
         else:
-            print("La colonne 'Notes' n'existe pas dans le DataFrame.")
+            print("The 'Notes' column does not exist in the DataFrame.")
+            return []
+
+    def train_model(self):
+        """Train the AI model for note combination recommendations."""
+        combinations = self.create_training_data()
+        if combinations:
+            X = self.mlb.fit_transform(combinations)
+            y = [1] * len(X)  # Dummy target variable
+            X_train, _, y_train, _ = train_test_split(X, y, test_size=0.2, random_state=42)
+            self.model = KNeighborsClassifier(n_neighbors=5)
+            self.model.fit(X_train, y_train)
+            print("AI model trained successfully.")
+        else:
+            print("No training data available.")
+
+    def clean_text(self, text):
+        """Clean the text from special characters, HTML tags, and unwanted phrases."""
+        text = re.sub(r'<[^>]+>', '', text)
+        text = re.sub(r'[\x80-\xFF]+', '', text)
+        unwanted_phrases = [
+            "Click Here For Ingredients", 
+            "Close", 
+            "Please be aware that ingredient lists may change or vary from time to time.", 
+            "Please refer to the ingredient list on the product package you receive for the most up to date list of ingredients."
+        ]
+        for phrase in unwanted_phrases:
+            text = text.replace(phrase, "")
+        return text.strip()
 
     def get_suggestions(self, fragrance_choice, limit=50):
-        """Obtenir les combinaisons de notes pour la note choisie, limité à un nombre défini de suggestions."""
-        if self.combinations_df is not None:
-            print(f"Recherche de combinaisons pour : {fragrance_choice}")
-            
-            # Chercher la note choisie dans toutes les combinaisons
-            combinations = self.combinations_df[
-                (self.combinations_df['Note_1'] == fragrance_choice) | (self.combinations_df['Note_2'] == fragrance_choice)
-            ]
-
-            if combinations.empty:
-                print(f"Aucune combinaison trouvée pour {fragrance_choice}.")
+        """Predict note combinations based on the chosen fragrance."""
+        if self.model:
+            if fragrance_choice not in self.mlb.classes_:
+                print(f"The note '{fragrance_choice}' does not exist in the available data.")
                 return []
+            fragrance_choice_encoded = self.mlb.transform([[fragrance_choice]])
+            distances, indices = self.model.kneighbors(fragrance_choice_encoded, n_neighbors=limit)
+            suggestions = []
+            for idx in indices[0]:
+                combination_array = np.array([self.model._fit_X[idx]])
+                combination = self.mlb.inverse_transform(combination_array)[0]
+                filtered_combination = [note for note in combination if note != fragrance_choice]
+                if len(filtered_combination) >= 2:
+                    suggested_combination = f"{fragrance_choice} + {filtered_combination[0]} + {filtered_combination[1]}"
+                    clean_suggestion = self.clean_text(suggested_combination)
+                    suggestions.append(clean_suggestion)
+            return suggestions[:limit]
+        else:
+            print("The model is not trained.")
+            return []
 
-            # Limiter les suggestions selon le paramètre `limit` et éliminer les doublons
-            limited_combinations = combinations.apply(lambda x: f"{x['Note_1']} + {x['Note_2']}", axis=1).unique()[:limit].tolist()
-            return limited_combinations
+    def find_existing_perfumes(self, suggested_combinations, limit=5):
+        """Find existing perfumes based on the suggested combinations."""
+        found_perfumes = []
+        for combination in suggested_combinations:
+            notes = combination.split(' + ')
+            matching_perfumes = self.data[self.data['Notes'].apply(lambda x: all(note.strip() in x for note in notes))]
+            found_perfumes.extend(matching_perfumes.head(limit).to_dict(orient='records'))
+        print("Found perfumes:", found_perfumes)  # Debugging line
+        return found_perfumes[:limit]
 
-        return []
-
-# Exemple d'utilisation (peut être commenté dans le fichier final)
+# Example usage
 if __name__ == "__main__":
-    filepath = "D:\\5TWIN\\projet_django\\commande_perso\\final_perfume_data.csv"  # Remplacez par le chemin vers votre fichier CSV
-    fragrance_manager = FragranceDataManagement(filepath)
+    filepath = "D:\\5TWIN\\projet_django\\commande_perso\\final_perfume_data.csv"
+    fragrance_ai = FragranceAI(filepath)
 
-    # Tester la fonction de suggestion
-    suggestions = fragrance_manager.get_suggestions("Berries")
-    print("Suggestions :", suggestions)
+    # Test the suggestion function
+    suggestions = fragrance_ai.get_suggestions("tangerine")
+    print("AI Suggestions:", suggestions)
+
+    # Find and display existing perfumes based on the suggestions
+    existing_perfumes = fragrance_ai.find_existing_perfumes(suggestions, limit=5)
+    for perfume in existing_perfumes:
+        print(f"Name: {perfume['Nom']}")
+        print(f"Description: {perfume['Description']}")
+        if perfume['Image']:
+            print(f"Image: {perfume['Image']}")
+        print("\n")

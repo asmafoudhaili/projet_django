@@ -458,28 +458,13 @@
                     {% csrf_token %}
 
                     <!-- Champ Base Notes -->
-                    <select name="base_notes" class="form-control form-control-lg mb-2" required>
-                        <option value="">Select Base Note</option>
-                        {% for value, label in form.base_notes.field.choices %}
-                            <option value="{{ value }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
+                    <input type="text" name="base_notes" placeholder="Enter Base Notes" class="form-control form-control-lg mb-2" required>
 
                     <!-- Champ Middle Notes -->
-                    <select name="middle_notes" class="form-control form-control-lg mb-2" required>
-                        <option value="">Select Middle Note</option>
-                        {% for value, label in form.middle_notes.field.choices %}
-                            <option value="{{ value }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
+                    <input type="text" name="middle_notes" placeholder="Enter Middle Notes" class="form-control form-control-lg mb-2" required>
 
                     <!-- Champ Top Notes -->
-                    <select name="top_notes" class="form-control form-control-lg mb-2" required>
-                        <option value="">Select Top Note</option>
-                        {% for value, label in form.top_notes.field.choices %}
-                            <option value="{{ value }}">{{ label }}</option>
-                        {% endfor %}
-                    </select>
+                    <input type="text" name="top_notes" placeholder="Enter Top Notes" class="form-control form-control-lg mb-2" required>
 
                     <!-- Champ Fragrance Strength -->
                     <select name="fragrance_strength" class="form-control form-control-lg mb-2" required>
@@ -531,7 +516,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> 
+</section>
+
 
   
   <footer id="footer" class="mt-5">
@@ -675,41 +662,39 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
-  <script>
+  <script> 
     document.getElementById("createOrderBtn").addEventListener("click", function(event) {
-        event.preventDefault();  // Empêche la soumission standard du formulaire
+        event.preventDefault();
 
-        // Récupérer les valeurs du formulaire
-        const baseNotes = document.querySelector('select[name="base_notes"]').value;
-        const middleNotes = document.querySelector('select[name="middle_notes"]').value;
-        const topNotes = document.querySelector('select[name="top_notes"]').value;
-        const fragranceStrength = document.querySelector('select[name="fragrance_strength"]').value;
-        const numberOfBottles = parseInt(document.querySelector('input[name="number_of_bottles"]').value);
-        const engravingText = document.querySelector('input[name="engraving_text"]').value;
-        const fragranceChoice = document.querySelector('input[name="fragrance_choice"]').value;
+        // Récupérer les éléments du formulaire et vérifier s'ils existent
+        const baseNotesElement = document.querySelector('input[name="base_notes"]');
+        const middleNotesElement = document.querySelector('input[name="middle_notes"]');
+        const topNotesElement = document.querySelector('input[name="top_notes"]');
+        const fragranceStrengthElement = document.querySelector('select[name="fragrance_strength"]');
+        const numberOfBottlesElement = document.querySelector('input[name="number_of_bottles"]');
+        const engravingTextElement = document.querySelector('input[name="engraving_text"]');
+        const fragranceChoiceElement = document.querySelector('input[name="fragrance_choice"]');
 
-        // Vérifier les valeurs récupérées
-        console.log("Base Notes:", baseNotes);
-        console.log("Middle Notes:", middleNotes);
-        console.log("Top Notes:", topNotes);
-        console.log("Fragrance Strength:", fragranceStrength);
-        console.log("Number of Bottles:", numberOfBottles);
-        console.log("Engraving Text:", engravingText);
-        console.log("Fragrance Choice:", fragranceChoice);
+        // S'assurer que chaque élément existe avant d'accéder à sa valeur
+        const baseNotes = baseNotesElement ? baseNotesElement.value : '';
+        const middleNotes = middleNotesElement ? middleNotesElement.value : '';
+        const topNotes = topNotesElement ? topNotesElement.value : '';
+        const fragranceStrength = fragranceStrengthElement ? fragranceStrengthElement.value : '';
+        const numberOfBottles = numberOfBottlesElement ? parseInt(numberOfBottlesElement.value) : 0;
+        const engravingText = engravingTextElement ? engravingTextElement.value : '';
+        const fragranceChoice = fragranceChoiceElement ? fragranceChoiceElement.value : '';
 
-        // Validation de numberOfBottles
+        // Vérification de `numberOfBottles`
         if (!numberOfBottles || isNaN(numberOfBottles)) {
             alert("Please enter a valid number of bottles.");
             return;
         }
 
-        // Calculer le prix estimé selon la logique définie dans la vue
-        let estimatedPrice = calculateEstimatedPrice(baseNotes, middleNotes, topNotes, fragranceStrength, numberOfBottles, engravingText, fragranceChoice);
+        // Calculer le prix estimé
+        const estimatedPrice = calculateEstimatedPrice(baseNotes, middleNotes, topNotes, fragranceStrength, numberOfBottles, engravingText, fragranceChoice);
+        console.log("Prix estimé :", estimatedPrice);
 
-        // Afficher le prix estimé dans la console avant de l'afficher dans le modal
-        console.log("Estimated Price before showing modal:", estimatedPrice);
-
-        // Remplir le modal avec les données du formulaire
+        // Remplir le modal avec les valeurs
         document.getElementById("reviewBaseNotes").textContent = baseNotes;
         document.getElementById("reviewMiddleNotes").textContent = middleNotes;
         document.getElementById("reviewTopNotes").textContent = topNotes;
@@ -717,58 +702,42 @@
         document.getElementById("reviewNumberOfBottles").textContent = numberOfBottles;
         document.getElementById("reviewEngravingText").textContent = engravingText;
         document.getElementById("reviewFragranceChoice").textContent = fragranceChoice;
+        document.getElementById("reviewEstimatedPrice").textContent = estimatedPrice.toFixed(2);
 
-        // Afficher le prix estimé dans le modal
-        document.getElementById("reviewEstimatedPrice").textContent = estimatedPrice.toFixed(2); // Formatage à deux décimales
-
-        // Affiche le modal
+        // Afficher le modal
         new bootstrap.Modal(document.getElementById("orderReviewModal")).show();
     });
 
-    // Fonction pour calculer le prix estimé
     function calculateEstimatedPrice(baseNotes, middleNotes, topNotes, fragranceStrength, numberOfBottles, engravingText, fragranceChoice) {
         const basePricePerBottle = 20; // Prix de base par bouteille
         let ingredientCost = 0;
 
-        // Coûts en fonction des notes de parfum
-        if (baseNotes) {
-            ingredientCost += 5; // Coût supplémentaire pour la base notes
-        }
-        if (middleNotes) {
-            ingredientCost += 3; // Coût supplémentaire pour les notes de cœur
-        }
-        if (topNotes) {
-            ingredientCost += 2; // Coût supplémentaire pour les notes de tête
-        }
+        // Coût supplémentaire en fonction des notes
+        if (baseNotes) ingredientCost += 5;
+        if (middleNotes) ingredientCost += 3;
+        if (topNotes) ingredientCost += 2;
         
-        // Coût de la force du parfum
-        if (fragranceStrength) {
-            ingredientCost += 4; // Coût supplémentaire pour la force du parfum
-        }
-
-        // Coût pour l'engravement
+        // Coût supplémentaire pour la force de parfum et l'engravement
+        if (fragranceStrength) ingredientCost += 4;
         const engravingCost = engravingText ? 5 : 0;
 
-        // Coût pour le choix de la fragrance
-        if (fragranceChoice) {
-            ingredientCost += 7; // Coût supplémentaire pour le choix de la fragrance
-        }
+        // Coût pour le choix de fragrance
+        if (fragranceChoice) ingredientCost += 7;
 
-        // Calcul du prix total
-        const totalPrice = (basePricePerBottle + ingredientCost + engravingCost) * numberOfBottles;
-        return totalPrice;
+        // Calcul final
+        return (basePricePerBottle + ingredientCost + engravingCost) * numberOfBottles;
     }
 
-    // Gestionnaire d'événements pour le bouton "Submit Order" dans le modal
+    // Soumission de commande dans le modal
     document.getElementById("submitOrderBtn").addEventListener("click", function() {
-        const formData = new FormData(document.getElementById("custom-order-form"));  // Récupère les données du formulaire
+        const formData = new FormData(document.getElementById("custom-order-form"));
 
         fetch("{% url 'custom_order_create' %}", {
             method: 'POST',
             headers: {
                 'X-CSRFToken': '{{ csrf_token }}',
             },
-            body: formData,  // Envoie les données du formulaire
+            body: formData,
         })
         .then(response => response.json())
         .then(data => {
@@ -780,7 +749,6 @@
                     button: "Okay",
                 });
                 bootstrap.Modal.getInstance(document.getElementById("orderReviewModal")).hide();
-                // Vous pouvez ajouter une redirection ou une mise à jour de la page ici
             } else {
                 alert("Erreur lors de la soumission de la commande : " + data.error);
             }
@@ -788,6 +756,7 @@
         .catch(error => console.error("Erreur:", error));
     });
 </script>
+
 
 
 

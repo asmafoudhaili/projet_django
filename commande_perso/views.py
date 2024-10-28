@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
 from panier.models import Cart, CartItem 
-from .data_management import FragranceDataManagement
+from .data_management import FragranceAI
 
 # Assurez-vous que ce chemin correspond à l'emplacement de votre fichier CSV
 FILE_PATH = 'D:\\5TWIN\\projet_django\\commande_perso\\final_perfume_data.csv'
@@ -153,19 +153,33 @@ def custom_order_delete(request, pk):
     return render(request, 'custom_order_confirm_delete.html', {'order': order})
 
 def guide_view(request):
+    suggestions = []
+    existing_perfumes = []
+    error = None
+    FILE_PATH = "D:\\5TWIN\\projet_django\\commande_perso\\final_perfume_data.csv"
+
     if request.method == "POST":
         fragrance_choice = request.POST.get('fragrance_choice')
-        manager = FragranceDataManagement(FILE_PATH)  # Assurez-vous que le chemin est défini
+        ai_manager = FragranceAI(FILE_PATH)  # Initialiser FragranceAI
 
-        # Vérification si les données sont chargées correctement
-        if manager.data.empty:
+        # Charger les données et entraîner le modèle
+        if ai_manager.data.empty:
             print("Erreur : Les données n'ont pas pu être chargées.")
-            return render(request, 'guide.html', {'suggestions': []})
+            error = "Données indisponibles."
+        else:
+            try:
+                suggestions = ai_manager.get_suggestions(fragrance_choice, limit=50)
+                existing_perfumes = ai_manager.find_existing_perfumes(suggestions, limit=5)
+            except Exception as e:
+                print("Erreur lors de la génération des suggestions :", e)
+                error = "Erreur lors de la génération des suggestions."
 
-        suggestions = manager.get_suggestions(fragrance_choice, limit=50)  # Limiter à 50 suggestions
-        return render(request, 'guide.html', {'suggestions': suggestions})
+    return render(request, 'guide.html', {
+        'suggestions': suggestions,
+        'existing_perfumes': existing_perfumes,
+        'error': error
+    })
 
-    return render(request, 'guide.html')
 
 
 

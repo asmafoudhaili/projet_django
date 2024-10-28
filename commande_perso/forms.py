@@ -8,30 +8,22 @@ class CustomizationOptionForm(forms.ModelForm):
         fields = ['customization_type', 'details']
 
 class CustomOrderForm(forms.ModelForm):
-    engraving_text = forms.CharField(required=False, label="Engraving Text")  # Champ optionnel pour l'engravement
-    fragrance_choice = forms.CharField(required=False, label="Fragrance Choice")  # Champ optionnel pour la fragrance
-    base_notes = forms.ChoiceField(choices=[
-        ('sandalwood', 'Sandalwood'),
-        ('vanilla', 'Vanilla'),
-        # Ajoutez d'autres notes de base ici
-    ], required=True, label="Base Notes")
-    middle_notes = forms.ChoiceField(choices=[
-        ('rose', 'Rose'),
-        ('jasmine', 'Jasmine'),
-        # Ajoutez d'autres notes de coeur ici
-    ], required=True, label="Middle Notes")
-    top_notes = forms.ChoiceField(choices=[
-        ('citrus', 'Citrus'),
-        ('mint', 'Mint'),
-        # Ajoutez d'autres notes de tête ici
-    ], required=True, label="Top Notes")
+    engraving_text = forms.CharField(required=False, label="Engraving Text")
+    fragrance_choice = forms.CharField(required=False, label="Fragrance Choice")
+    
+    # Change these fields to CharField for regular text input
+    base_notes = forms.CharField(required=True, label="Base Notes")
+    middle_notes = forms.CharField(required=True, label="Middle Notes")
+    top_notes = forms.CharField(required=True, label="Top Notes")
+    
     fragrance_strength = forms.ChoiceField(choices=[
         ('eau de toilette', 'Eau de Toilette'),
         ('eau de parfum', 'Eau de Parfum'),
-        # Ajoutez d'autres forces de fragrance ici
+        # Other strengths can be added here
     ], required=True, label="Fragrance Strength")
-    number_of_bottles = forms.IntegerField(min_value=1, initial=1, label="Number of Bottles")  # Champ pour le nombre de bouteilles
-    additional_notes = forms.CharField(widget=forms.Textarea, required=False, label="Additional Notes")  # Notes supplémentaires
+    
+    number_of_bottles = forms.IntegerField(min_value=1, initial=1, label="Number of Bottles")
+    additional_notes = forms.CharField(widget=forms.Textarea, required=False, label="Additional Notes")
 
     class Meta:
         model = CustomOrder
