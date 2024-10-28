@@ -6,6 +6,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 import json
 from panier.models import Cart, CartItem 
+from .data_management import FragranceDataManagement
+
+# Assurez-vous que ce chemin correspond à l'emplacement de votre fichier CSV
+FILE_PATH = 'D:\\5TWIN\\projet_django\\commande_perso\\final_perfume_data.csv'
 
 # CustomizationOption Views
 def customization_option_list(request):
@@ -147,3 +151,22 @@ def custom_order_delete(request, pk):
         order.delete()
         return redirect('custom_order_list')
     return render(request, 'custom_order_confirm_delete.html', {'order': order})
+
+def guide_view(request):
+    if request.method == "POST":
+        fragrance_choice = request.POST.get('fragrance_choice')
+        manager = FragranceDataManagement(FILE_PATH)  # Assurez-vous que le chemin est défini
+
+        # Vérification si les données sont chargées correctement
+        if manager.data.empty:
+            print("Erreur : Les données n'ont pas pu être chargées.")
+            return render(request, 'guide.html', {'suggestions': []})
+
+        suggestions = manager.get_suggestions(fragrance_choice, limit=50)  # Limiter à 50 suggestions
+        return render(request, 'guide.html', {'suggestions': suggestions})
+
+    return render(request, 'guide.html')
+
+
+
+
