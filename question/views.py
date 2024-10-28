@@ -255,12 +255,14 @@ def delete_test(request):
 
 # Define the available personalities
 personalities = {
-    "Rêveur (Imagineur)": ["dream", "imagine", "creative"],
-    "Empathique": ["caring", "sensitive", "empathize"],
-    "Persévérant": ["determined", "strong", "steady"],
-    "Travaillomane (Analyseur)": ["analytical", "detailed", "methodical"],
-    "Promoteur": ["enthusiastic", "energetic", "lively"],
-    "Rebelle (Energiseur)": ["independent", "bold", "daring"]
+   "Leader (Commandant)": ["charismatic", "decisive", "motivating"],
+"Sociable (Connecteur)": ["friendly", "communicative", "outgoing"],
+"Protecteur (Gardien)": ["reliable", "supportive", "loyal"],
+"Innovateur (Inventeur)": ["inventive", "visionary", "adaptive"],
+"Réaliste (Pragmatique)": ["practical", "down-to-earth", "realistic"],
+"Philosophe (Réfléchi)": ["thoughtful", "introspective", "analytical"],
+"Équilibré (Harmonieux)": ["calm", "patient", "tolerant"]
+
 }
 
 def analyze_personality(description):
@@ -269,7 +271,7 @@ def analyze_personality(description):
         if any(keyword in description.lower() for keyword in keywords):
             return personality
     return "Unknown personality"
-    
+
 @csrf_exempt  # Disable CSRF protection for this view (only if necessary)
 def capture_voice_input(request):
     if request.method == "POST":
