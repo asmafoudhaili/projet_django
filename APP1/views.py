@@ -2,6 +2,7 @@
 from django.shortcuts import render, redirect
 from perfumes.models import Perfume
 from perfumes.forms import PerfumeForm
+from perfumes.models import Description  # Ensure this line is present
 
 
 def index(request):
@@ -18,3 +19,7 @@ def index(request):
         form = PerfumeForm()
 
     return render(request, 'index.html', {'perfumes': perfumes, 'form': form})
+def description_list(request):
+    descriptions = Description.objects.all()
+    perfumes = Perfume.objects.all()  # Assurez-vous d'obtenir tous les parfums
+    return render(request, 'description.html', {'descriptions': descriptions, 'perfumes': perfumes})

@@ -396,6 +396,11 @@
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">Contact</a>
+                  
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link"  href="#target-section">Search</a>
+                  
                 </li>
               </ul>
             </div>
@@ -405,9 +410,13 @@
         <div class="col-3 col-lg-auto">
           <ul class="list-unstyled d-flex m-0">
             <li class="d-none d-lg-block">
-              <a href="index.html" class="text-uppercase mx-3">Wishlist <span class="wishlist-count">(0)</span>
-              </a>
-            </li>
+              {% if user.is_authenticated %}
+                  <a href="{% url 'log_out' %}" class="text-uppercase mx-3">Logout</a>
+              {% else %}
+                  <a href="{% url 'sing_in' %}" class="text-uppercase mx-3">Login</a>
+              {% endif %}
+          </li>
+          
             <li class="d-none d-lg-block">
               <a href="index.html" class="text-uppercase mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"
                 aria-controls="offcanvasCart">Cart <span class="cart-count">(0)</span>
@@ -451,7 +460,7 @@
             <p>Discover our exclusive collection of luxury perfumes. Each fragrance is crafted to perfection.</p>
             <!-- Bouton Ajouter -->                    {% if user.is_superuser %}
 
-            <a href="{% url 'perfume_create' %}" class="btn btn-primary">
+            <a href="{% url 'App1:perfume_create' %}" class="btn btn-primary">
               Ajouter un Parfum
           </a>
           
@@ -488,20 +497,32 @@
         </div>
     </div>
     
-    <div class="row">
-      <div class="swiper main-swiper py-4">
-          <div class="swiper-wrapper d-flex border-animation-left">
-              {% for perfume in perfumes %}
-              <div class="swiper-slide">
-                  <div class="banner-item image-zoom-effect">
-                      <div class="image-holder">
-                          <a href="#">
-                              <img src="{{ perfume.image.url }}" alt="{{ perfume.nom }}" class="img-fluid">
-                          </a>
-                      </div>
-                      <div class="banner-content py-4">
+  
+    </div>
+</section>
+
+
+
+
+
+<section id="new-arrival" class="new-arrival product-carousel py-5 position-relative overflow-hidden">
+  <div class="container">
+    <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
+      <h4 class="text-uppercase">Our New Arrivals</h4>
+      <a href="index.html" class="btn-link">View All Products</a>
+    </div>
+    <div class="swiper product-swiper open-up" data-aos="zoom-out">
+      <div class="swiper-wrapper d-flex border-animation-left">
+          {% for perfume in perfumes %}
+          <div class="swiper-slide">
+              <div class="banner-item image-zoom-effect">
+                  <div class="image-holder position-relative">
+                      <a href="{% url 'App1:perfume_detail' perfume.id %}">
+                          <img src="{{ perfume.image.url }}" alt="{{ perfume.nom }}" class="img-fluid" style="height: 400px; width: 300px;">
+                      </a>
+                      <div class="product-content">
                           <h5 class="element-title text-uppercase">
-                              <a href="{% url 'perfume_detail' perfume.id %}" class="item-anchor">{{ perfume.nom }}</a>
+                              <a href="{% url 'App1:perfume_detail' perfume.id %}" class="item-anchor">{{ perfume.nom }}</a>
                           </h5>
                           <p>{{ perfume.marque }} - {{ perfume.type }} ({{ perfume.contenance }})</p>
                           <p>Prix : {{ perfume.prix }} €</p>
@@ -515,19 +536,54 @@
                           </div>
                           <!-- New Details button -->
                           <div class="btn-left">
-                              <a href="{% url 'perfume_detail' perfume.id %}" class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Details</a>
+                              <a href="{% url 'App1:perfume_detail' perfume.id %}" class="btn-link fs-6 text-uppercase item-anchor text-decoration-none">Details</a>
                           </div>
                       </div>
                   </div>
               </div>
-              {% endfor %}
           </div>
-          <div class="swiper-pagination"></div>
+          {% endfor %}
       </div>
+      <div class="swiper-pagination"></div>
   </div>
   
-    </div>
+    <div class="icon-arrow icon-arrow-left"><svg width="50" height="50" viewBox="0 0 24 24">
+        <use xlink:href="#arrow-left"></use>
+      </svg></div>
+    <div class="icon-arrow icon-arrow-right"><svg width="50" height="50" viewBox="0 0 24 24">
+        <use xlink:href="#arrow-right"></use>
+      </svg></div>
+  </div>
 </section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   <section class="features py-5">
     <div class="container">
@@ -624,146 +680,27 @@
     </div>
   </section>
 
-  <section id="new-arrival" class="new-arrival product-carousel py-5 position-relative overflow-hidden">
-    <div class="container">
-      <div class="d-flex flex-wrap justify-content-between align-items-center mt-5 mb-3">
-        <h4 class="text-uppercase">Our New Arrivals</h4>
-        <a href="index.html" class="btn-link">View All Products</a>
-      </div>
-      <div class="swiper product-swiper open-up" data-aos="zoom-out">
-        <div class="swiper-wrapper d-flex">
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder position-relative">
-                <a href="index.html">
-                  <img src="{% static 'APP1/images/product-item-1.jpg' %}" alt="categories" class="product-image img-fluid">
-                  "{% static 'APP1/images/product-item-1.jpg' %}"
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="element-title text-uppercase fs-5 mt-3">
-                    <a href="index.html">Dark florish onepiece</a>
-                  </h5>
-                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$95.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder position-relative">
-                <a href="index.html">
-                  <img src="{% static 'APP1/images/product-item-2.jpg' %}" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="index.html">Baggy Shirt</a>
-                  </h5>
-                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$55.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder position-relative">
-                <a href="index.html">
-                  <img src="{% static 'APP1/images/product-item-3.jpg' %}" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="index.html">Cotton off-white shirt</a>
-                  </h5>
-                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$65.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder position-relative">
-                <a href="index.html">
-                  <img src="{% static 'APP1/images/product-item-4.jpg' %}" alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="index.html">Crop sweater</a>
-                  </h5>
-                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$50.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div class="product-item image-zoom-effect link-effect">
-              <div class="image-holder position-relative">
-                <a href="index.html">
-                  <img src="{% static 'APP1/images/product-item-10.jpg' %}"alt="categories" class="product-image img-fluid">
-                </a>
-                <a href="index.html" class="btn-icon btn-wishlist">
-                  <svg width="24" height="24" viewBox="0 0 24 24">
-                    <use xlink:href="#heart"></use>
-                  </svg>
-                </a>
-                <div class="product-content">
-                  <h5 class="text-uppercase fs-5 mt-3">
-                    <a href="index.html">Crop sweater</a>
-                  </h5>
-                  <a href="#" class="text-decoration-none" data-after="Add to cart"><span>$70.00</span></a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-pagination"></div>
-      </div>
-      <div class="icon-arrow icon-arrow-left"><svg width="50" height="50" viewBox="0 0 24 24">
-          <use xlink:href="#arrow-left"></use>
-        </svg></div>
-      <div class="icon-arrow icon-arrow-right"><svg width="50" height="50" viewBox="0 0 24 24">
-          <use xlink:href="#arrow-right"></use>
-        </svg></div>
-    </div>
-  </section>
+  
 
-  <section class="collection bg-light position-relative py-5">
+  <section class="collection bg-light position-relative py-5" id="target-section">
     <div class="container">
       <div class="row">
         <div class="title-xlarge text-uppercase txt-fx domino">Collection</div>
         <div class="collection-item d-flex flex-wrap my-5">
           <div class="col-md-6 column-container">
             <div class="image-holder">
-              <img src="{% static 'APP1/images/single-image-2.jpg' %}" alt="collection" class="product-image img-fluid">
+              <img src="{% static 'APP1/images/Sauvage EF24_Pack Solo_3700x2000.jpg' %}" style="height: 500px; width: 750px;" alt="collection" class="product-image img-fluid">
               
             </div>
           </div>
-          <div class="col-md-6 column-container bg-white">
+          <div class="col-md-6 column-container bg-white" >
             <div class="collection-content p-5 m-0 m-md-5">
-              <h3 class="element-title text-uppercase">Classic winter collection</h3>
-              <p>Dignissim lacus, turpis ut suspendisse vel tellus. Turpis purus, gravida orci, fringilla a. Ac sed eu
-                fringilla odio mi. Consequat pharetra at magna imperdiet cursus ac faucibus sit libero. Ultricies quam
-                nunc, lorem sit lorem urna, pretium aliquam ut. In vel, quis donec dolor id in. Pulvinar commodo mollis
-                diam sed facilisis at cursus imperdiet cursus ac faucibus sit faucibus sit libero.</p>
-              <a href="#" class="btn btn-dark text-uppercase mt-3">Shop Collection</a>
+              <h3 class="element-title text-uppercase">Find Your Perfume</h3>
+              <p>With the power of the Ia you can discover the description of any perfume and you can find your perfume here </p>
+              <a href="{% url 'App1:upload_image' %}" class="btn btn-dark text-uppercase mt-3">Searching Perfumes</a>
+             
+
+
             </div>
           </div>
         </div>
@@ -1317,6 +1254,7 @@
               <li class="menu-item">
                 <a href="#" class="item-anchor">Contact</a>
               </li>
+              
             </ul>
           </div>
         </div>
