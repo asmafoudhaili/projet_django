@@ -3,6 +3,13 @@ from django.shortcuts import render, get_object_or_404
 from .models import Cart, CartItem
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.db.models import Sum
+from payment.models import Paiement,Commande
+from django.views.decorators.http import require_POST
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, redirect
+import stripe
+from django.conf import settings
 
 # Configuration du logger
 logger = logging.getLogger(__name__)
@@ -15,20 +22,33 @@ def cart_list(request):
     except Cart.DoesNotExist:
         cart_items = []
 
-    # Calcul des sous-totaux et du total
+    # Calcul des sous-totaux des articles dans le panier
     items_with_subtotals = []
     for item in cart_items:
-        subtotal = item.custom_order.total_amount * item.quantity  # Calcul du sous-total
+        subtotal = item.get_subtotal()
         items_with_subtotals.append({
             'item': item,
             'subtotal': subtotal
         })
 
+    # Total des articles du panier
     cart_total = sum(item['subtotal'] for item in items_with_subtotals)
+
+    # Récupération des commandes existantes pour l'utilisateur
+    commandes = Commande.objects.filter(client=request.user)
+
+    # Calcul du total des commandes existantes
+    commandes_total = commandes.aggregate(total=Sum('total'))['total'] or 0.00
+
+    # Calcul du total combiné
+    total_general = cart_total + commandes_total
 
     context = {
         'cart_items': items_with_subtotals,
         'cart_total': cart_total,
+        'commandes': commandes,
+        'commandes_total': commandes_total,
+        'total_general': total_general,
     }
     return render(request, 'panier.html', context)
 
@@ -71,4 +91,57 @@ def cart_remove_item(request, item_id):
     return JsonResponse({'success': True, 'cart_total': cart_total})
 
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
+@require_POST
+def create_checkout_session(request):
+    total_combined = float(request.POST.get('total_combined', 0))
+    
+    # Créer une commande pour enregistrer le paiement
+    commande = Commande.objects.create(client=request.user, total=total_combined)
+
+    # Enregistrer le paiement dans la base de données avant de créer la session Stripe
+    paiement = Paiement.objects.create(
+        commande=commande,
+        methode_paiement='Stripe',  # Ajustez selon vos besoins
+    )
+
+    # Créer des articles de ligne pour Stripe
+    line_items = [{
+        'price_data': {
+            'currency': 'usd',  # Remplacez par votre devise
+            'product_data': {
+                'name': 'Total des Commandes',  # Nom générique pour le total
+            },
+            'unit_amount': int(total_combined * 100),  # Montant en cents
+        },
+        'quantity': 1,  # Quantité de 1 pour le total
+    }]
+    
+
+    # Créer une session de paiement Stripe
+    checkout_session = stripe.checkout.Session.create(
+        payment_method_types=['card'],
+        line_items=line_items,
+        mode='payment',
+        success_url='http://localhost:8000/success/',  # URL de succès
+        cancel_url='http://localhost:8000/cancel/',    # URL d'annulation
+    )
+
+    # Mettre à jour le statut du paiement après la création de la session
+    paiement.statut_paiement = 'en_attente'  # Statut initial
+    paiement.save()
+
+    # Rediriger l'utilisateur vers la session de paiement Stripe
+    return redirect(checkout_session.url, code=303)
+
+# Vues pour les pages de succès et d'annulation
+def success(request):
+    return render(request, 'success.html')
+
+def cancel(request):
+    return render(request, 'cancel.html')
+def delete_commande(request, commande_id):
+    commande = get_object_or_404(Commande, id=commande_id)
+    commande.delete()  # Supprime la commande
+    return JsonResponse({'success': True}) 
