@@ -455,10 +455,23 @@
                 <p>Explore unexpected blends and find your next favorite scent.</p>
                 <form id="custom-order-form" method="post" class="d-flex flex-wrap gap-2">
                     {% csrf_token %}
-                    <input type="text" name="fragrance_choice" placeholder="Enter fragrance choice" class="form-control form-control-lg mb-2" />
-                    <button type="submit" class="btn btn-dark btn-lg text-uppercase w-100">Show suggestions</button>
+                    
+                    <!-- Champ Fragrance Choice -->
+                    <input type="text" name="fragrance_choice" id="fragrance-choice"
+                           value="{{ form.fragrance_choice.value|default_if_none:'' }}" 
+                           class="form-control form-control-lg mb-2" 
+                           placeholder="Enter fragrance choice" />
+                    <div id="fragrance-error" class="text-danger mt-1" style="display: none;">
+                        Please enter a fragrance choice.
+                    </div>
+                    
+                    <!-- Bouton de Soumission -->
+                    <button type="button" onclick="validateForm()" class="btn btn-dark btn-lg text-uppercase w-100">
+                        Show suggestions
+                    </button>
                 </form>
-
+                
+                <!-- Suggestions et Erreurs -->
                 {% if error %}
                     <div class="alert alert-danger mt-3">{{ error }}</div>
                 {% endif %}
@@ -473,23 +486,11 @@
                         {% endfor %}
                     </div>
                 {% endif %}
-
-                {% if existing_perfumes %}
-                    <h2 class="mt-5">Existing Perfumes:</h2>
-                    <div class="d-flex flex-wrap gap-3 justify-content-center">
-                        {% for perfume in existing_perfumes %}
-                            <div class="perfume-item bg-light p-3 rounded shadow-sm" style="width: 200px;">
-                                <strong>{{ perfume.Name }}</strong><br>
-                                <em>{{ perfume.Brand }}</em><br>
-                                <p>Description: {{ perfume.Description|truncatechars:100 }}</p>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
             </div>
         </div>
-    </div> 
+    </div>
 </section>
+
 
 
 
@@ -637,6 +638,24 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
 
+  <script>
+    function validateForm() {
+        // Récupère la valeur du champ fragrance_choice
+        var fragranceChoice = document.getElementById("fragrance-choice").value;
+        var errorDiv = document.getElementById("fragrance-error");
+        
+        // Vérifie si le champ est vide
+        if (fragranceChoice.trim() === "") {
+            // Affiche un message d'erreur si le champ est vide
+            errorDiv.style.display = "block";
+        } else {
+            // Cache le message d'erreur et soumet le formulaire si le champ est rempli
+            errorDiv.style.display = "none";
+            document.getElementById("custom-order-form").submit();
+        }
+    }
+    </script>
+  
   <script src="{% static 'APP1/js/jquery.min.js' %}"></script>
   <script src="{% static 'APP1/js/plugins.js' %}"></script>
   <script src="{% static 'APP1/js/SmoothScroll.js' %}"></script>

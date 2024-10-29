@@ -26,7 +26,7 @@ class CustomOrderAdmin(SimpleHistoryAdmin):
     search_fields = ('client__username', 'order_status')
     list_editable = ('order_status', 'total_amount')
     readonly_fields = ('total_amount_preview',)
-    actions = ['mark_as_shipped', 'cancel_order', 'export_as_csv', 'apply_discount', 'export_as_excel', 'send_notification']
+    actions = ['mark_as_shipped', 'cancel_order', 'export_as_csv', 'apply_discount', 'export_as_excel']
 
     def mark_as_shipped(self, request, queryset):
         queryset.update(order_status='shipped')
@@ -47,19 +47,7 @@ class CustomOrderAdmin(SimpleHistoryAdmin):
         self.message_user(request, "Remise appliquée avec succès aux commandes sélectionnées.")
     apply_discount.short_description = "Appliquer une remise de 10 %%"
 
-    def send_notification(self, request, queryset):
-        for order in queryset:
-            subject = f'Confirmation de votre commande #{order.id}'
-            message = f'Bonjour {order.client.username},\n\nVotre commande #{order.id} a été traitée avec succès.\n\nMerci pour votre achat !'
-            send_mail(
-                subject,
-                message,
-                settings.DEFAULT_FROM_EMAIL,
-                [order.client.email],
-                fail_silently=False,
-            )
-        self.message_user(request, "Notifications envoyées aux clients sélectionnés.")
-    send_notification.short_description = "Envoyer une notification"
+   
 
     def export_as_csv(self, request, queryset):
         response = HttpResponse(content_type='text/csv')

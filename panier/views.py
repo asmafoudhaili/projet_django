@@ -124,8 +124,8 @@ def create_checkout_session(request):
         payment_method_types=['card'],
         line_items=line_items,
         mode='payment',
-        success_url='http://localhost:8000/success/',  # URL de succès
-        cancel_url='http://localhost:8000/cancel/',    # URL d'annulation
+        success_url='http://localhost:8000/cart/success/',  # URL de succès
+        cancel_url='http://localhost:8000/cart/cancel/',    # URL d'annulation
     )
 
     # Mettre à jour le statut du paiement après la création de la session
@@ -143,5 +143,5 @@ def cancel(request):
     return render(request, 'cancel.html')
 def delete_commande(request, commande_id):
     commande = get_object_or_404(Commande, id=commande_id)
-    commande.delete()  # Supprime la commande
-    return JsonResponse({'success': True}) 
+    commande.delete()  
+    return JsonResponse({'success': True})
